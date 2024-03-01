@@ -1,6 +1,9 @@
+package Cards;
+
 public abstract class Card {
 
-    private String cardName;
+    protected String cardName;
+    protected boolean hasBeenPlayed;
 
     /**
      * Constructor for Card Class
@@ -8,12 +11,22 @@ public abstract class Card {
      */
     Card(String name){
         this.cardName = name;
+        hasBeenPlayed = false;
     }
 
+    /**
+     * @return if the card is able to be played
+     */
     abstract boolean getCanPlay();
 
+    /**
+     * @return the Card type
+     */
     abstract String getCardType();
 
+    /**
+     * @return Get the name of the card
+     */
     public String getCardName() {
         return cardName;
     }
