@@ -10,6 +10,14 @@ public class MileageCard extends Card{
 
 
     /**
+     * Method that plays the action of the card
+     */
+    @Override
+    void playCard() {
+
+    }
+
+    /**
      * @return if the card is able to be played
      */
     @Override

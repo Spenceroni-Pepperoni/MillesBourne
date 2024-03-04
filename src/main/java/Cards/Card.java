@@ -15,6 +15,12 @@ public abstract class Card {
     }
 
     /**
+     * Method that plays the action of the card
+     */
+    abstract void playCard();
+
+
+    /**
      * @return if the card is able to be played
      */
     abstract boolean getCanPlay();
