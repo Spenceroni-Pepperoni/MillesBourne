@@ -3,6 +3,7 @@ public class HumanPlayer extends Player {
 	String name;
 	
 	public HumanPlayer(String name) {
+		super();
 		this.name = name;
 	}
 	
