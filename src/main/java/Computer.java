@@ -8,8 +8,8 @@ public class Computer extends Player {
 
 
     public void takeTurn() {
-        if (hasHazard() == false) {
-            if (speedLimit() == true) {
+        if (!hasHazard()) {
+            if (!speedLimit()) {
                 int playIndex = -1;
                 for (Card hand : deck) {
                     if (hand.getCardType().equals("Remedy") || hand.getCardType().equals("Safety")) {

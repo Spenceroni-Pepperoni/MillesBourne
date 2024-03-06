@@ -1,3 +1,4 @@
+import Cards.*;
 
 public class HumanPlayer extends Player {
 	String name;
@@ -13,8 +14,20 @@ public class HumanPlayer extends Player {
 		
 		//something here to get user input for variables
 		
-		if (deck.get(playIndex).getCanPlay()) {
-			return discard(playIndex);
+		while (!deck.get(playIndex).getCanPlay()) {
+			//change playIndex
+		}
+
+		if (deck.get(playIndex).getCardType().equals("25 Miles")) {
+			mileage += 25;
+		} else if (deck.get(playIndex).getCardType().equals("50 Miles")) {
+			mileage += 50;
+		} else if (deck.get(playIndex).getCardType().equals("75 Miles")) {
+			mileage += 75;
+		} else if (deck.get(playIndex).getCardType().equals("100 Miles")) {
+			mileage += 100;
+		} else if (deck.get(playIndex).getCardType().equals("200 Miles")) {
+			mileage += 200;
 		}
 		
 		if (drawPileOrDiscard == 0) {
@@ -22,6 +35,8 @@ public class HumanPlayer extends Player {
 		} else {
 			drawDiscard();
 		}
+		
+		return discard(playIndex);
 	}
 	
 	public String getPlayerName() {
