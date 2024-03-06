@@ -1,12 +1,24 @@
 import java.util.*;
+import Cards.*;
 
 public class Player {
-	private ArrayList<Card> deck;
 
 	protected ArrayList<Card> deck;
-	private int mileage;
+	protected int mileage;
 	private boolean turn;
 	private ArrayList<Card> hazards;
+	
+	public void drawPile() {
+		deck.add(Game.getPileCard()); //method isn't in decomp but might be needed
+	}
+	
+	public void drawDiscard() {
+		deck.add(Game.getDiscardCard()); //same here
+	}
+	
+	public int getMileage() {
+		return mileage;
+	}
 
 	public void receiveHazard(Card card) {
 		hazards.add(card);
@@ -21,10 +33,9 @@ public class Player {
 	public boolean speedLimit() {
 		for(Card hazard : hazards) {
 			if(hazard.getName().equals("speedLimit")) {
-				return false;
+				return true;
 			}
 		}
-
 	}
 
 	public boolean hasHazard() {
@@ -35,11 +46,8 @@ public class Player {
 		}
 		return false;
 	}
-}	public boolean getTurn() {
-		return isTurn;
-	}
 	
-	public Card discard(int cardIndex) {
-		
+	public boolean getTurn() {
+		return isTurn;
 	}
 }
