@@ -1,4 +1,4 @@
-
+import Cards.*;
 public class Computer extends Player {
 
 
@@ -20,6 +20,20 @@ public class Computer extends Player {
                                 if (deck.get(i).canPlay()) {
                                     playIndex = i;
                                     break;
+                                }
+                            }else if(deck.get(i).getCardType().equals("Remedy")){
+                                if (deck.get(i).canPlay()) {
+                                    playIndex = i;
+                                }
+                            }else if(deck.get(i).getCardType().equals("Mileage")){
+                                if(speedLimit()){
+                                    if(deck.get(i).getMileage()>max && deck.get(i).getMileage()<=50){
+                                        max = i;
+                                    }
+                                }else{
+                                    if(deck.get(i).getMileage()>max){
+                                        max = i;
+                                    }
                                 }
                             }
                         }
