@@ -57,7 +57,7 @@ public class Computer extends Player {
                             if(deck.get(max).getMileage()>50){
                                 return discard(max);
                             }else if(hazard>=0){
-                                return discard(hazard)
+                                return discard(hazard);
                             }else{
                                 return discard(max);
                             }

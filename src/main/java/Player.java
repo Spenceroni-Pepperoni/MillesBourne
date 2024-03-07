@@ -21,6 +21,10 @@ public class Player {
 		return mileage;
 	}
 
+	public void setMileage(int miles){
+		mileage = miles;
+	}
+
 	public void receiveHazard(Card card) {
 		hazards.add(card);
 	}
