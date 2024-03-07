@@ -7,6 +7,7 @@ public class Player {
 	protected int mileage;
 	private boolean turn;
 	private ArrayList<Card> hazards;
+	private ArrayList<Card> safeties;
 	
 	public void drawPile() {
 		deck.add(Game.getPileCard()); //method isn't in decomp but might be needed

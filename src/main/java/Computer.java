@@ -7,22 +7,21 @@ public class Computer extends Player {
     }
 
 
-    public void takeTurn() {
+    public Card takeTurn() {
         if (!hasHazard()) {
             if (!speedLimit()) {
                 int playIndex = -1;
                 for (Card hand : deck) {
-                    if (hand.getCardType().equals("Remedy") || hand.getCardType().equals("Safety")) {
 
-                        int max = 0;
+                        int max = -1;
+                        int hazard = -1;
                         for (int i = 0; i < deck.size(); i++) {
                             if (deck.get(i).getCardType().equals("Safety")) {
-                                if (deck.get(i).canPlay()) {
-                                    playIndex = i;
-                                    break;
+                                if (deck.get(i).getCanPlay()) {
+                                    return deck.get(i);
                                 }
                             }else if(deck.get(i).getCardType().equals("Remedy")){
-                                if (deck.get(i).canPlay()) {
+                                if (deck.get(i).getCanPlay()) {
                                     playIndex = i;
                                 }
                             }else if(deck.get(i).getCardType().equals("Mileage")){
@@ -35,10 +34,26 @@ public class Computer extends Player {
                                         max = i;
                                     }
                                 }
+                            }else if(deck.get(i).getCardType().equals("Hazard")){
+                                if (deck.get(i).getCanPlay()) {
+                                    hazard = i;
+                                }
                             }
                         }
+                        if(playIndex>=0){
+                            return discard(playIndex);
+                        }else if(max>=0){
+                            if(deck.get(max).getMileage()>50){
+                                return discard(max);
+                            }else if(hazard>=0){
+                                return discard(hazard)
+                            }else{
+                                return discard(max);
+                            }
+                        }
+                        return discard(0);
 
-                    }
+
                 }
             }
         }
