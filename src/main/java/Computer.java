@@ -8,13 +8,24 @@ public class Computer extends Player {
 
 
     public Card takeTurn() {
-        if (!hasHazard()) {
-            if (!speedLimit()) {
-                int playIndex = -1;
+        if(Game.discarded().getCardType().equals("Safety")){
+           drawDiscard();
+        }else if(Game.discarded().getCardType().equals("Remedy")){
+            if(Game.discarded().getCanPlay){
+                drawDiscard();
+            }
+        }else{
+            drawPile();
+        }
+
+
+        
+        int playIndex = -1;
+        int max = -1;
+        int hazard = -1;
                 for (Card hand : deck) {
 
-                        int max = -1;
-                        int hazard = -1;
+
                         for (int i = 0; i < deck.size(); i++) {
                             if (deck.get(i).getCardType().equals("Safety")) {
                                 if (deck.get(i).getCanPlay()) {
@@ -55,8 +66,8 @@ public class Computer extends Player {
 
 
                 }
-            }
-        }
+
+
 
     }
 
