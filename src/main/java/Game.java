@@ -17,6 +17,15 @@ public class Game {
 	}
 	
 	private void createCards() {
-		
+		for (int i = 0; i < 14; i++) {
+			if (i < 3) {
+				pile.add(new HazardCard("Accident"));
+				pile.add(new HazardCard("Out of Gas"));
+				pile.add(new HazardCard("Flat Tire"));
+			}
+			if (i < 4) {
+				pile.add(new HazardCard("Speed Limit"));
+			}
+		}
 	}
 }
