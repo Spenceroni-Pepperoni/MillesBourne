@@ -5,15 +5,18 @@ public class Game {
 	private ArrayList<Card> pile;
 	private ArrayList<Card> discard;
 	private int[] players;
+	private int turnNum;
 	
-	public Game(int[] players) {
+	public Game(Player[] players) {
 		this.players = players;
 		pile = new ArrayList<Card>();
 		discard = new ArrayList<Card>();
+		turnNum = 0;
 	}
 	
 	public void startGame() {
 		createCards();
+		shuffleDeck();
 	}
 	
 	//adds all cards to game
@@ -53,5 +56,29 @@ public class Game {
 			}
 			pile.add(new RemedyCard("Go"));
 		}
+	}
+	
+	public void loadGame() {
+		
+	}
+	
+	public void saveGame() {
+		
+	}
+	
+	public void restartGame() {
+		
+	}
+	
+	public int getTurnNum() {
+		return turnNum;
+	}
+	
+	public void shuffleDeck() {
+		
+	}
+	
+	public void shuffleDeck(ArrayList<Card> cards) {
+		
 	}
 }
