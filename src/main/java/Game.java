@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import Cards.*;
 
 public class Game {
-	private ArrayList<Card> pile;
-	private ArrayList<Card> discard;
+	private static ArrayList<Card> pile;
+	private static ArrayList<Card> discard;
 	private Player[] players;
 	private int turnNum;
 	
@@ -17,7 +17,10 @@ public class Game {
 	public void startGame() {
 		createCards();
 		shuffleDeck();
-		System.out.println(pile);
+		
+		for (int i = 0; i < players.length; i++) {
+			
+		}
 	}
 	
 	//adds all cards to game
@@ -75,6 +78,18 @@ public class Game {
 		return turnNum;
 	}
 	
+	public static Card getPileCard() {
+		Card c = pile.get(pile.size() - 1);
+		pile.remove(pile.size() - 1);
+		return c;
+	}
+	
+	public static Card getDiscardCard() {
+		Card c = discard.get(discard.size() - 1);
+		discard.remove(discard.size() - 1);
+		return c;
+	}
+	
 	public void shuffleDeck() {
 		for (int i = 0; i < 150; i++) {
 			int j = (int)(Math.random() * pile.size());
@@ -86,7 +101,16 @@ public class Game {
 		}
 	}
 	
-	public void shuffleDeck(ArrayList<Card> cards) {
-		
+	public ArrayList<Card> shuffleDeck(ArrayList<Card> c) {
+		ArrayList<Card> cards = c;
+		for (int i = 0; i < 150; i++) {
+			int j = (int)(Math.random() * cards.size());
+			int k = (int)(Math.random() * cards.size());
+			
+			Card temp = cards.get(j);
+			cards.set(j, cards.get(k));
+			cards.set(k, temp);
+		}
+		return cards;
 	}
 }

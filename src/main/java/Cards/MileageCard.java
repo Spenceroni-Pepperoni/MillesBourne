@@ -8,7 +8,6 @@ public class MileageCard extends Card{
         this.numMiles = numMiles;
     }
 
-
     /**
      * Method that plays the action of the card
      */
@@ -31,5 +30,10 @@ public class MileageCard extends Card{
     @Override
     String getCardType() {
         return  numMiles + " Miles";
+    }
+    
+    @Override
+    public int getMileage() {
+    	return numMiles;
     }
 }

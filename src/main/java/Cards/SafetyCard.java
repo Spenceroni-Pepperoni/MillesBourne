@@ -29,4 +29,9 @@ public class SafetyCard extends Card{
     String getCardType() {
         return null;
     }
+
+	@Override
+	public int getMileage() {
+		return 0;
+	}
 }

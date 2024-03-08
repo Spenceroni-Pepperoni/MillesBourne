@@ -10,6 +10,8 @@ public abstract class Card {
     Card(String name){
         this.cardName = name;
     }
+    
+    public abstract int getMileage();
 
     public abstract boolean getCanPlay();
 

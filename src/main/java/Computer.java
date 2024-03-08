@@ -8,10 +8,10 @@ public class Computer extends Player {
 
 
     public Card takeTurn() {
-        if(Game.discarded().getCardType().equals("Safety")){
+        if(Game.getDiscardCard().getCardType().equals("Safety")){
            drawDiscard();
-        }else if(Game.discarded().getCardType().equals("Remedy")){
-            if(Game.discarded().getCanPlay){
+        }else if(Game.getDiscardCard().getCardType().equals("Remedy")){
+            if(Game.getDiscardCard().getCanPlay()){
                 drawDiscard();
             }
         }else{
