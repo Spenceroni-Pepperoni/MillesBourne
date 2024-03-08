@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
@@ -7,9 +8,13 @@ import java.awt.Event;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Panel;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.StringConcatFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -24,58 +29,336 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-class cardUI{
-	BufferedImage image;
+// a button, you can click on in
+class buttonUI{
 	int locX;
 	int locY;
+	int width;
+	int height;
+	public String text;
+	Color color;
+	boolean invis;
+	boolean clicked = false;
+	String panelName = "Default";
+	
+	public buttonUI(int locX,int locY, int width, int height) {
+		this.locX = locX;
+		this.locY = locY;
+		this.width = width;
+		this.height = height;
+	}
+	
+	public buttonUI(int locX,int locY, int width, int height,String panelName) {
+		this.locX = locX;
+		this.locY = locY;
+		this.width = width;
+		this.height = height;
+		this.panelName = panelName;
+	}
+	
+	public buttonUI(int locX,int locY, int width, int height,String text,Color color,boolean invis) {
+		this.locX = locX;
+		this.locY = locY;
+		this.width = width;
+		this.height = height;
+		this.text = text;
+		this.color = color;
+		this.invis = invis;
+	}
+	
+	public buttonUI(int locX,int locY, int width, int height,String text,Color color,boolean invis,String panelName) {
+		this.locX = locX;
+		this.locY = locY;
+		this.width = width;
+		this.height = height;
+		this.text = text;
+		this.color = color;
+		this.invis = invis;
+		this.panelName = panelName;
+	}
+	
+	public boolean wasClicked(MouseEvent e,String currentPanel) {
+		if (panelName == currentPanel) {
+			if (e.getX() > locX && e.getX() < locX+width) {
+				if (e.getY() > locY && e.getY() < locY+height) {
+					return true;
+				}
+			}
+		}
+		return false;
+		
+	}
+	
+	public void draw(Graphics g,String currentPanel) {
+		if (!invis && panelName == currentPanel ) {
+			g.setColor(color);	
+			if (clicked) {
+				g.fillRect(locX, locY, width, height);
+			}
+			else {
+				g.drawRect(locX, locY, width, height);
+			}
+			g.drawString(text,locX+(width/16), locY+(height/2));
+		}
+	}
+	
+	public void setClicked() {
+		clicked = true;
+	}
+	
+	public void setUnclicked() {
+		clicked = false;
+	}
+}
+
+class cardUI extends buttonUI{
+	BufferedImage image;
+	int beforeDragX;
+	int beforeDragY;
+	
 	public cardUI(String imageName,int x, int y) {
+		super(x,y,108,192);
 		try {
 			image = ImageIO.read(new File(imageName));
-			locX = x;
-			locY = y;
+			this.text = imageName;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void draw(Graphics g) {
-		g.drawImage(image, locX, locY, 108, 192, null);
+	public cardUI(String imageName,int x, int y,int width,int height,String panelName) {
+		super(x,y,width,height,panelName);
+		try {
+			image = ImageIO.read(new File(imageName));
+			this.text = imageName;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void draw(Graphics g,String currentPanel) {
+		draw(g,currentPanel,false);
+	
+	}
+	
+	public void draw(Graphics g,String currentPanel,boolean selected) {
+		if (currentPanel == this.panelName) {
+			if (selected) {
+				g.setColor(Color.BLUE);
+				g.fillRoundRect(locX-5, locY-5, width+10, height+10,13,13);
+			}
+			g.drawImage(image, locX, locY, width, height, null);
+			System.out.println("drew card");
+		}
+	}
+	
+	public void startDrag() {
+		beforeDragX = locX;
+		beforeDragY = locY;
+	}
+	
+	public void finishDrag() {
+		locX = beforeDragX;
+		locY = beforeDragY;
 	}
 }
 
-class myPanel extends JPanel {
-	ArrayList<cardUI> yourDeck= new ArrayList<cardUI>();
-	cardUI card = new cardUI("Stop.png",10,10);
+class myPanel extends JPanel implements MouseListener{
+	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
+	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
+	ArrayList<buttonUI> buttons = new ArrayList<buttonUI>();
+	cardUI drawCard = new cardUI("Back of Card.png",850,125);
+	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
+	cardUI draggingCard = null;
+	cardUI backgroundImage = new cardUI("Background.jpg",0,0,1000,1000,"Startscreen");
+	int selectedCard = -1;
+	int draggingDifX = 0;
+	int draggingDifY = 0;
+	String currentPanel = "Startscreen";
+	String rulesText = "AbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbc";
 	myPanel(){
 		for (int i=0;i<7;i++) {
 			yourDeck.add(new cardUI("Stop.png",70+120*i,750));
 		}
+		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",Color.RED,false));
+		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",Color.GREEN,false));
+		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",Color.BLUE,false));
+		cardDropspot.add(new buttonUI(40, 740, 900, 220, "YourCards",Color.ORANGE,true));
+		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.GRAY,false));
+		
+		buttons.add(new buttonUI(800, 480, 100, 60, "Save",Color.BLUE,false));
+		buttons.add(new buttonUI(800, 550, 100, 60, "Load",Color.BLUE,false));
+		buttons.add(new buttonUI(800, 620, 100, 60, "Rules",Color.BLUE,false));
+		
+		buttons.add(new buttonUI(800, 560, 100, 60, "Load",Color.BLUE,false,"Startscreen"));
+		buttons.add(new buttonUI(800, 480, 100, 60, "Start",Color.BLUE,false,"Startscreen"));
+		
+		buttons.add(new buttonUI(300, 100, 400, 400, rulesText,Color.BLUE,false,"Rulesscreen"));
+		buttons.add(new buttonUI(800, 480, 100, 60, "Resume",Color.BLUE,false,"Rulesscreen"));
+		
+		addMouseListener(this);
+		 this.addMouseMotionListener(new MouseMotionAdapter() {
+	            @Override
+	            public void mouseDragged(MouseEvent e) {
+	            	System.out.println("mouse dragged");
+	                if (draggingCard != null) {
+	                	System.out.println("dragging card: "+draggingCard.text);
+	                	draggingCard.locX = e.getX()-draggingDifX;
+	                	draggingCard.locY = e.getY()-draggingDifY;
+	                }
+	                repaint();
+	            }
+	        });
 		
 	}
     public void paintComponent(Graphics g) {
-    	for (int i=0;i<yourDeck.size();i++) {
-			yourDeck.get(i).draw(g);
-		}
+    	g.setColor(new Color(156,175,136));
+    	g.fillRect(0, 0, 1000, 1000);
     	
-    	g.setColor(Color.RED);
-    	g.drawRect(200, 500, 108, 192);
-    	g.setColor(Color.GREEN);
-    	g.drawRect(400, 500, 108, 192);
     	g.setColor(Color.BLUE);
-    	g.drawRect(600, 500, 108, 192);
-		
-    	for (int i=0;i<yourDeck.size();i++) {
-    		card.locX = 850;
-    		card.locY = 230+i*-15;
-			card.draw(g);
-		}
-    	
     	g.setFont(new Font("Arial Black", Font.BOLD, 20));
-    	g.drawString("Miles",5, 675);
-    	g.drawString("You: "+50,5, 700);
-    	g.drawString("Computer: "+10,5, 725);
+    	backgroundImage.draw(g, currentPanel);
+    	new buttonUI(5, 600, 100, 40, "Miles",Color.BLUE,false).draw(g, currentPanel);
+    	new buttonUI(5, 650, 100, 40, "You:"+15,Color.BLUE,false).draw(g, currentPanel);
+    	new buttonUI(5, 700, 100, 40, "AI:"+25,Color.BLUE,false).draw(g, currentPanel);
+    	
+    	for (int i=0;i<yourDeck.size();i++) {
+			yourDeck.get(i).draw(g,currentPanel,(i==selectedCard));
+		}
+    	for (int i=0;i<cardDropspot.size();i++) {
+    		cardDropspot.get(i).draw(g,currentPanel);
+    	}
+    	for (int i=0;i<buttons.size();i++) {
+    		buttons.get(i).draw(g,currentPanel);
+    	}
+    	
+    	for (int i=0;i<6;i++) {
+    		drawCardPile.locX = 850;
+    		drawCardPile.locY = 230+i*-15;
+    		drawCardPile.draw(g,currentPanel);
+		}
+    	drawCard.draw(g,currentPanel);
     }
+    
+    public void redraw() {
+    	Graphics g = getGraphics();
+    	paintComponent(g);
+    }
+    
+    public void setDraggingCard(cardUI card,MouseEvent e) {
+    	card.startDrag();
+		this.draggingCard = card;
+		draggingDifX = (e.getX()-draggingCard.locX);
+		draggingDifY = (e.getY()-draggingCard.locY);
+    }
+    
+    public void mousePressed(MouseEvent e) {
+    	if (e.getButton() == MouseEvent.BUTTON1) {
+	    	System.out.println("mouse pressed");
+	    	// add buffer image to stop flickering
+	    	for (int i=0;i<buttons.size();i++) {
+	    		if (buttons.get(i).wasClicked(e,currentPanel)) {
+	    			buttons.get(i).setClicked();
+	    			redraw();
+	    		}
+	    	}
+	    	for (int i=0;i<yourDeck.size();i++) {
+	    		if (yourDeck.get(i).wasClicked(e,currentPanel)){
+	    			selectedCard = i;
+	    			setDraggingCard(yourDeck.get(i), e);
+	    			System.out.println("selected card: "+i);
+	    			redraw();
+	    		}
+			}
+	    	if (drawCard.wasClicked(e,currentPanel)){
+	    		setDraggingCard(drawCard, e);
+	    		redraw();
+	    	}
+    	}
+    	
+    }
+    
+    public void moveCard(int dropSpot) {
+    	draggingCard.locX = cardDropspot.get(dropSpot).locX;
+		draggingCard.locY = cardDropspot.get(dropSpot).locY;
+    }
+    
+    public void setScreen(String panelName) {
+    	currentPanel = panelName;
+    	redraw();
+    }
+    
+    public void mouseReleased(MouseEvent e) {
+    	for (int i=0;i<buttons.size();i++) {
+    		buttons.get(i).setUnclicked();
+    		if (buttons.get(i).wasClicked(e,currentPanel)) {
+    			switch(buttons.get(i).text) {
+	    			case "Save":{
+						break;
+					}
+	    			case "Load":{
+    					
+    					break;
+    				}
+    				case "Rules":{
+    					setScreen("Rulesscreen");
+    					break;
+    				}
+    				case "Start":{
+    					setScreen("Default");
+    					break;
+    				}
+    				case "Resume":{
+    					setScreen("Default");
+    					break;
+    				}
+    			}
+    			
+    		}
+    		redraw();
+    	}
+    	if (draggingCard != null) {
+	    	draggingCard.finishDrag();
+	    	for (int i=0;i<cardDropspot.size();i++) {
+	    		if (cardDropspot.get(i).wasClicked(e,currentPanel)){
+	    			switch(cardDropspot.get(i).text) {
+	    				case "Hazards":{
+	    					moveCard(i);
+	    					break;
+	    				}
+	    				case "Safties":{
+	    					moveCard(i);
+	    					break;
+	    				}
+	    				case "Miles":{
+	    					moveCard(i);
+	    					break;
+	    				}
+	    				case "Discard":{
+	    					moveCard(i);
+	    					break;
+	    				}
+	    				case "YourCards":{
+	    					if (draggingCard.equals(drawCard)) {
+	    						// user dragged a new card into there deck
+	    					}
+	    					break;
+	    				}
+	    			}
+	    			
+	    		}
+	    	}
+	    	draggingCard = null;
+	    	redraw();
+    	}
+    	
+    	System.out.println("mouse released");
+    }
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {}
 }
 
 public class userInterface {
