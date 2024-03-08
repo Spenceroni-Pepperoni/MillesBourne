@@ -4,7 +4,7 @@ import Cards.*;
 public class Game {
 	private ArrayList<Card> pile;
 	private ArrayList<Card> discard;
-	private int[] players;
+	private Player[] players;
 	private int turnNum;
 	
 	public Game(Player[] players) {
@@ -17,6 +17,7 @@ public class Game {
 	public void startGame() {
 		createCards();
 		shuffleDeck();
+		System.out.println(pile);
 	}
 	
 	//adds all cards to game
@@ -75,7 +76,14 @@ public class Game {
 	}
 	
 	public void shuffleDeck() {
-		
+		for (int i = 0; i < 150; i++) {
+			int j = (int)(Math.random() * pile.size());
+			int k = (int)(Math.random() * pile.size());
+			
+			Card temp = pile.get(j);
+			pile.set(j, pile.get(k));
+			pile.set(k, temp);
+		}
 	}
 	
 	public void shuffleDeck(ArrayList<Card> cards) {

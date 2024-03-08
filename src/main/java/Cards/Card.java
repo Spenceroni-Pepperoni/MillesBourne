@@ -11,9 +11,9 @@ public abstract class Card {
         this.cardName = name;
     }
 
-    abstract boolean getCanPlay();
+    public abstract boolean getCanPlay();
 
-    abstract String getCardType();
+    public abstract String getCardType();
 
     public String getCardName() {
         return cardName;
