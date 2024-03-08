@@ -1,13 +1,15 @@
 import java.util.*;
 import Cards.*;
 
-public class Player {
+abstract public class Player {
 
 	protected ArrayList<Card> deck;
 	protected int mileage;
 	private boolean turn;
 	private ArrayList<Card> hazards;
 	private ArrayList<Card> safeties;
+	
+	abstract public Card takeTurn();
 	
 	public void drawPile() {
 		//deck.add(Game.getPileCard()); //method isn't in decomp but might be needed

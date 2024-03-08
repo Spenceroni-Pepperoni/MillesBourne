@@ -17,9 +17,16 @@ public class Game {
 	public void startGame() {
 		createCards();
 		shuffleDeck();
+		boolean gameOver = false;
 		
-		for (int i = 0; i < players.length; i++) {
-			
+		while (!gameOver) {
+			for (int i = 0; i < players.length; i++) {
+				discard.add(players[i].takeTurn());
+			}
+			turnNum++;
+			if (pile.size() == 0) {
+				gameOver = true;
+			}
 		}
 	}
 	
