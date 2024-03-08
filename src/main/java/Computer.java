@@ -23,7 +23,7 @@ public class Computer extends Player {
         int playIndex = -1;
         int max = -1;
         int hazard = -1;
-                for (Card hand : deck) {
+
 
 
                         for (int i = 0; i < deck.size(); i++) {
@@ -65,7 +65,7 @@ public class Computer extends Player {
                         return discard(0);
 
 
-                }
+                
 
 
 
