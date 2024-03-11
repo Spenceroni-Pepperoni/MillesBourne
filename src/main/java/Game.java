@@ -14,6 +14,13 @@ public class Game {
 		turnNum = 0;
 	}
 	
+	public Game(Player[] players, ArrayList<Card> p, ArrayList<Card> d, int t) {
+		this.players = players;
+		pile = p;
+		discard = d;
+		turnNum = t;
+	}
+	
 	public void startGame() {
 		createCards();
 		shuffleDeck();
@@ -69,16 +76,31 @@ public class Game {
 		}
 	}
 	
-	public void loadGame() {
-		
+	public void loadGame(Game g) {
+		this.players = g.players;
+		this.pile = g.pile;
+		this.discard = g.discard;
+		this.turnNum = g.turnNum;
 	}
 	
-	public void saveGame() {
-		
+	public Game saveGame() {
+		return new Game(players, pile, discard, turnNum);
 	}
 	
 	public void restartGame() {
-		
+		for (int i = 0; i > pile.size(); i--) {
+			pile.remove(i);
+			i--;
+		}
+		for (int i = 0; i > discard.size(); i--) {
+			discard.remove(i);
+			i--;
+		}
+		for (int i = 0; i < players.length; i++) {
+			players[i].setMileage(0);
+		}
+		startGame();
+		turnNum = 0;
 	}
 	
 	public int getTurnNum() {
