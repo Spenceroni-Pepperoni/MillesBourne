@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.security.auth.x500.X500Principal;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,6 +41,8 @@ class buttonUI{
 	boolean invis;
 	boolean clicked = false;
 	String panelName = "Default";
+	boolean textAboveUI;
+	ArrayList<String> textWrapped;
 	
 	public buttonUI(int locX,int locY, int width, int height) {
 		this.locX = locX;
@@ -56,25 +59,46 @@ class buttonUI{
 		this.panelName = panelName;
 	}
 	
-	public buttonUI(int locX,int locY, int width, int height,String text,Color color,boolean invis) {
+	public buttonUI(int locX,int locY, int width, int height,String text,Color color,boolean textAboveUI) {
 		this.locX = locX;
 		this.locY = locY;
 		this.width = width;
 		this.height = height;
 		this.text = text;
 		this.color = color;
-		this.invis = invis;
+		this.textAboveUI = textAboveUI;
+		createWrappedText();
 	}
 	
-	public buttonUI(int locX,int locY, int width, int height,String text,Color color,boolean invis,String panelName) {
+	public buttonUI(int locX,int locY, int width, int height,String text,Color color,boolean textAboveUI,String panelName) {
 		this.locX = locX;
 		this.locY = locY;
 		this.width = width;
 		this.height = height;
 		this.text = text;
 		this.color = color;
-		this.invis = invis;
+		this.textAboveUI = textAboveUI;
 		this.panelName = panelName;
+		createWrappedText();
+	}
+	
+	public void createWrappedText() {
+		if (text.length()>20) {
+			textWrapped = new ArrayList<String>();
+			String[] words = text.split(" ");
+			String line = "";
+			for (int i=0;i<words.length;i++) {
+				line += words[i] +" ";
+				if (i%9==0 && i!=0) {
+					textWrapped.add(line);
+					line = "";
+				}
+			}
+			textWrapped.add(line);
+			for (String s : textWrapped) {
+				System.out.println("line: "+s);
+			}
+		}
 	}
 	
 	public boolean wasClicked(MouseEvent e,String currentPanel) {
@@ -98,7 +122,19 @@ class buttonUI{
 			else {
 				g.drawRect(locX, locY, width, height);
 			}
-			g.drawString(text,locX+(width/16), locY+(height/2));
+			
+			if (textWrapped == null) {
+				if (textAboveUI) {
+					g.drawString(text,locX+(width/16), locY);
+				}else {
+					g.drawString(text,locX+(width/16), locY+(height/2));
+				}
+			}else {
+				for (int i=0;i<textWrapped.size();i++) {
+					g.drawString(textWrapped.get(i),locX+(width/16), locY+(height/2)-(i*20));
+				}
+			}
+			
 		}
 	}
 	
@@ -108,6 +144,10 @@ class buttonUI{
 	
 	public void setUnclicked() {
 		clicked = false;
+	}
+	
+	public void setInvis() {
+		invis = true;
 	}
 }
 
@@ -177,16 +217,17 @@ class myPanel extends JPanel implements MouseListener{
 	int draggingDifX = 0;
 	int draggingDifY = 0;
 	String currentPanel = "Startscreen";
-	String rulesText = "AbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbcAbc";
+	String rulesText = "Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc";
 	myPanel(){
 		for (int i=0;i<7;i++) {
 			yourDeck.add(new cardUI("Stop.png",70+120*i,750));
 		}
-		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",Color.RED,false));
-		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",Color.GREEN,false));
-		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",Color.BLUE,false));
+		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",Color.RED,true));
+		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",Color.GREEN,true));
+		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",Color.BLUE,true));
 		cardDropspot.add(new buttonUI(40, 740, 900, 220, "YourCards",Color.ORANGE,true));
-		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.GRAY,false));
+		cardDropspot.get(cardDropspot.size()-1).setInvis();
+		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.GRAY,true));
 		
 		buttons.add(new buttonUI(800, 480, 100, 60, "Save",Color.BLUE,false));
 		buttons.add(new buttonUI(800, 550, 100, 60, "Load",Color.BLUE,false));
@@ -195,7 +236,7 @@ class myPanel extends JPanel implements MouseListener{
 		buttons.add(new buttonUI(800, 560, 100, 60, "Load",Color.BLUE,false,"Startscreen"));
 		buttons.add(new buttonUI(800, 480, 100, 60, "Start",Color.BLUE,false,"Startscreen"));
 		
-		buttons.add(new buttonUI(300, 100, 400, 400, rulesText,Color.BLUE,false,"Rulesscreen"));
+		buttons.add(new buttonUI(300, 100, 600, 370, rulesText,Color.BLUE,false,"Rulesscreen"));
 		buttons.add(new buttonUI(800, 480, 100, 60, "Resume",Color.BLUE,false,"Rulesscreen"));
 		
 		addMouseListener(this);
