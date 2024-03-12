@@ -39,7 +39,7 @@ abstract public class Player {
 
 	public boolean speedLimit() {
 		for(Card hazard : hazards) {
-			if(hazard.getCardType().equals("speedLimit")) {
+			if(hazard.getCardName().equals("Speed Limit")) {
 				return true;
 			}
 		}

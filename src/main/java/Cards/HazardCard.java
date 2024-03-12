@@ -9,19 +9,19 @@ public class HazardCard extends Card{
     /**
      * Method that plays the action of the card
      */
-    @Override
-    void playCard() {
+
+    public void playCard() {
 
     }
 
 
     @Override
-    boolean getCanPlay() {
+    public boolean getCanPlay() {
         return false;
     }
 
     @Override
-    String getCardType() {
+    public String getCardType() {
         return null;
     }
 

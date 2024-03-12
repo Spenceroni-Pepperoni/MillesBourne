@@ -9,8 +9,7 @@ public class SafetyCard extends Card{
     /**
      * Method that plays the action of the card
      */
-    @Override
-    void playCard() {
+    public void playCard() {
         
     }
 
@@ -18,7 +17,7 @@ public class SafetyCard extends Card{
      * @return if the card is able to be played
      */
     @Override
-    boolean getCanPlay() {
+    public boolean getCanPlay() {
         return false;
     }
 
@@ -26,7 +25,7 @@ public class SafetyCard extends Card{
      * @return the Card type
      */
     @Override
-    String getCardType() {
+    public String getCardType() {
         return null;
     }
 
