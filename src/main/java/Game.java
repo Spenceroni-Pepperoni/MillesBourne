@@ -4,18 +4,21 @@ import Cards.*;
 public class Game {
 	private static ArrayList<Card> pile;
 	private static ArrayList<Card> discard;
-	private Player[] players;
+	private Computer comp;
+	private HumanPlayer user;
 	private int turnNum;
 	
-	public Game(Player[] players) {
-		this.players = players;
+	public Game(String name) {
+		comp = new Computer();
+		user = new HumanPlayer(name);
 		pile = new ArrayList<Card>();
 		discard = new ArrayList<Card>();
 		turnNum = 0;
 	}
 	
-	public Game(Player[] players, ArrayList<Card> p, ArrayList<Card> d, int t) {
-		this.players = players;
+	public Game(HumanPlayer user, Computer comp, ArrayList<Card> p, ArrayList<Card> d, int t) {
+		this.user = user;
+		this.comp = comp;
 		pile = p;
 		discard = d;
 		turnNum = t;
@@ -25,11 +28,15 @@ public class Game {
 		createCards();
 		shuffleDeck();
 		boolean gameOver = false;
+		for(int i = 0; i<7; i++){
+			user.drawPile();
+			comp.drawPile();
+		}
+
 		
 		while (!gameOver) {
-			for (int i = 0; i < players.length; i++) {
-				discard.add(players[i].takeTurn());
-			}
+			discard.add(user.takeTurn());
+			discard.add(comp.takeTurn());
 			turnNum++;
 			if (pile.size() == 0) {
 				gameOver = true;
@@ -75,16 +82,21 @@ public class Game {
 			pile.add(new RemedyCard("Go"));
 		}
 	}
+
+	public ArrayList<Card> getUserDeck(){
+		return user.deck;
+	}
 	
 	public void loadGame(Game g) {
-		this.players = g.players;
+		this.user = g.user;
+		this.comp = g.comp;
 		this.pile = g.pile;
 		this.discard = g.discard;
 		this.turnNum = g.turnNum;
 	}
 	
 	public Game saveGame() {
-		return new Game(players, pile, discard, turnNum);
+		return new Game(user, comp, pile, discard, turnNum);
 	}
 	
 	public void restartGame() {
@@ -96,9 +108,8 @@ public class Game {
 			discard.remove(i);
 			i--;
 		}
-		for (int i = 0; i < players.length; i++) {
-			players[i].setMileage(0);
-		}
+		user.setMileage(0);
+		comp.setMileage(0);
 		startGame();
 		turnNum = 0;
 	}

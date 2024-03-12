@@ -1,13 +1,14 @@
 import java.util.*;
 import Cards.*;
 
-public class Player {
+public abstract class Player {
 
 	protected ArrayList<Card> deck;
 	protected int mileage;
 	private boolean isTurn;
 	private ArrayList<Card> hazards;
 	private ArrayList<Card> safeties;
+	private boolean started;
 
 	public Player(){
 		deck = new ArrayList<Card>();
@@ -25,6 +26,8 @@ public class Player {
 	public void drawDiscard() {
 		deck.add(Game.getDiscardCard()); //same here
 	}
+
+	public abstract Card takeTurn();
 	
 	public int getMileage() {
 		return mileage;
@@ -65,5 +68,5 @@ public class Player {
 	public boolean getTurn() {
 		return isTurn;
 	}
-	
+
 }

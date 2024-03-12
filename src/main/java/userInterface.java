@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.lang.invoke.StringConcatFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import Cards.*;
 
 import javax.imageio.ImageIO;
 import javax.security.auth.x500.X500Principal;
@@ -204,8 +205,10 @@ class cardUI extends buttonUI{
 		locY = beforeDragY;
 	}
 }
-
+//------------------------------------------------------------------------
 class myPanel extends JPanel implements MouseListener{
+	Game myGame = new Game("PlaceHolder");
+	ArrayList<Card> userDeck = = myGame.getUserDeck();
 	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
 	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
 	ArrayList<buttonUI> buttons = new ArrayList<buttonUI>();
@@ -401,6 +404,7 @@ class myPanel extends JPanel implements MouseListener{
     public void mouseExited(MouseEvent e) {}
 	public void mouseClicked(MouseEvent e) {}
 }
+
 
 public class userInterface {
     userInterface() {
