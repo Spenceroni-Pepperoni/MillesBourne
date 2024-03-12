@@ -23,7 +23,6 @@ public class Computer extends Player {
         int playIndex = -1;
         int max = -1;
         int hazard = -1;
-                for (Card hand : deck) {
 
 
                         for (int i = 0; i < deck.size(); i++) {
@@ -37,11 +36,11 @@ public class Computer extends Player {
                                 }
                             }else if(deck.get(i).getCardType().equals("Mileage")){
                                 if(speedLimit()){
-                                    if(deck.get(i).getMileage()>max && deck.get(i).getMileage()<=50){
+                                    if(((MileageCard)deck.get(i)).getMileage()>max && ((MileageCard)deck.get(i)).getMileage()<=50){
                                         max = i;
                                     }
                                 }else{
-                                    if(deck.get(i).getMileage()>max){
+                                    if(((MileageCard)deck.get(i)).getMileage()>max){
                                         max = i;
                                     }
                                 }
@@ -54,7 +53,7 @@ public class Computer extends Player {
                         if(playIndex>=0){
                             return discard(playIndex);
                         }else if(max>=0){
-                            if(deck.get(max).getMileage()>50){
+                            if(((MileageCard)deck.get(max)).getMileage()>50){
                                 return discard(max);
                             }else if(hazard>=0){
                                 return discard(hazard);
@@ -62,13 +61,12 @@ public class Computer extends Player {
                                 return discard(max);
                             }
                         }
-                        return discard(0);
-
-
-                }
 
 
 
+
+
+        return discard(0);
     }
 
 }

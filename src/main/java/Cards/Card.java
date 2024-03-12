@@ -25,6 +25,8 @@ public abstract class Card {
      */
     public abstract boolean getCanPlay();
 
+
+
     /**
      * @return the Card type
      */

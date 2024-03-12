@@ -32,4 +32,8 @@ public class MileageCard extends Card{
     public String getCardType() {
         return  numMiles + " Miles";
     }
+
+    public int getMileage() {
+        return numMiles;
+    }
 }
