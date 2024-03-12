@@ -118,6 +118,11 @@ public class Game {
 		discard.remove(discard.size() - 1);
 		return c;
 	}
+
+	public static Card peekDiscardCard() {
+		Card c = discard.get(discard.size() - 1);
+		return c;
+	}
 	
 	public void shuffleDeck() {
 		for (int i = 0; i < 150; i++) {

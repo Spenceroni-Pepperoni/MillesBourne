@@ -9,7 +9,7 @@ public abstract class Card {
      * Constructor for Card Class
      * @param name name of the Card
      */
-    Card(String name){
+    public Card(String name){
         this.cardName = name;
         hasBeenPlayed = false;
     }
@@ -17,18 +17,18 @@ public abstract class Card {
     /**
      * Method that plays the action of the card
      */
-    abstract void playCard();
+    public abstract void playCard();
 
 
     /**
      * @return if the card is able to be played
      */
-    abstract boolean getCanPlay();
+    public abstract boolean getCanPlay();
 
     /**
      * @return the Card type
      */
-    abstract String getCardType();
+    public abstract String getCardType();
 
     /**
      * @return Get the name of the card

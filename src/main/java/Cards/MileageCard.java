@@ -1,7 +1,7 @@
 package Cards;
 
 public class MileageCard extends Card{
-    int numMiles;
+    private int numMiles;
 
     public MileageCard(String name, int numMiles){
         super(name);
@@ -13,7 +13,7 @@ public class MileageCard extends Card{
      * Method that plays the action of the card
      */
     @Override
-    void playCard() {
+    public void playCard() {
 
     }
 
@@ -21,7 +21,7 @@ public class MileageCard extends Card{
      * @return if the card is able to be played
      */
     @Override
-    boolean getCanPlay() {
+    public boolean getCanPlay() {
         return false;
     }
 
@@ -29,7 +29,7 @@ public class MileageCard extends Card{
      * @return the Card type
      */
     @Override
-    String getCardType() {
+    public String getCardType() {
         return  numMiles + " Miles";
     }
 }
