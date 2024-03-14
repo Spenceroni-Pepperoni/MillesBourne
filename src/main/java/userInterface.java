@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.lang.invoke.StringConcatFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.spi.AbstractResourceBundleProvider;
+
 import Cards.*;
 
 import javax.imageio.ImageIO;
@@ -44,6 +46,7 @@ class buttonUI{
 	String panelName = "Default";
 	boolean textAboveUI;
 	ArrayList<String> textWrapped;
+	boolean unclickable;
 	
 	public buttonUI(int locX,int locY, int width, int height) {
 		this.locX = locX;
@@ -103,7 +106,7 @@ class buttonUI{
 	}
 	
 	public boolean wasClicked(MouseEvent e,String currentPanel) {
-		if (panelName == currentPanel) {
+		if (panelName == currentPanel && unclickable == false) {
 			if (e.getX() > locX && e.getX() < locX+width) {
 				if (e.getY() > locY && e.getY() < locY+height) {
 					return true;
@@ -150,12 +153,17 @@ class buttonUI{
 	public void setInvis() {
 		invis = true;
 	}
+	
+	public void setUnclickable() {
+		unclickable = true;
+	}
 }
 
 class cardUI extends buttonUI{
 	BufferedImage image;
 	int beforeDragX;
 	int beforeDragY;
+	int deckIndex = -1;
 	
 	public cardUI(String imageName,int x, int y) {
 		super(x,y,108,192);
@@ -166,6 +174,18 @@ class cardUI extends buttonUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public cardUI(String imageName,int x, int y,int index) {
+		super(x,y,108,192);
+		try {
+			image = ImageIO.read(new File(imageName));
+			this.text = imageName;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.deckIndex = index;
 	}
 	
 	public cardUI(String imageName,int x, int y,int width,int height,String panelName) {
@@ -207,7 +227,6 @@ class cardUI extends buttonUI{
 }
 //------------------------------------------------------------------------
 class myPanel extends JPanel implements MouseListener{
-	Game myGame;
 
 	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
 	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
@@ -215,19 +234,21 @@ class myPanel extends JPanel implements MouseListener{
 	cardUI drawCard = new cardUI("Back of Card.png",850,125);
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
+	cardUI removedDeckCard = null;
 	cardUI backgroundImage = new cardUI("Background.jpg",0,0,1000,1000,"Startscreen");
-	int selectedCard = -1;
-    int removedCardIndex = 0;
+	cardUI selectedCard = null;
 	int draggingDifX = 0;
 	int draggingDifY = 0;
 	String currentPanel = "Startscreen";
 	String rulesText = "Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc";
+	Game myGame;
 	myPanel(){
 		myGame = new Game("PlaceHolder");
 		myGame.startGame();
 		ArrayList<Card> userDeck =  myGame.getUserDeck();
 		for (int i=0;i<userDeck.size();i++) {
-			yourDeck.add(new cardUI(userDeck.get(i).getFileName(),70+120*i,750));
+			yourDeck.add(new cardUI(userDeck.get(i).getFileName(),70+120*i,750,i));
+			//yourDeck.get(i).deckIndex = i;
 		}
 
 		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",Color.RED,true));
@@ -245,6 +266,7 @@ class myPanel extends JPanel implements MouseListener{
 		buttons.add(new buttonUI(800, 480, 100, 60, "Start",Color.BLUE,false,"Startscreen"));
 		
 		buttons.add(new buttonUI(300, 100, 600, 370, rulesText,Color.BLUE,false,"Rulesscreen"));
+		buttons.get(buttons.size()-1).setUnclickable();
 		buttons.add(new buttonUI(800, 480, 100, 60, "Resume",Color.BLUE,false,"Rulesscreen"));
 		
 		addMouseListener(this);
@@ -273,8 +295,12 @@ class myPanel extends JPanel implements MouseListener{
     	new buttonUI(5, 650, 100, 40, "You:"+15,Color.BLUE,false).draw(g, currentPanel);
     	new buttonUI(5, 700, 100, 40, "AI:"+25,Color.BLUE,false).draw(g, currentPanel);
     	
+    	if (selectedCard != null) {
+    		selectedCard.draw(g, currentPanel,true);
+    	}
+    	
     	for (int i=0;i<yourDeck.size();i++) {
-			yourDeck.get(i).draw(g,currentPanel,(i==selectedCard));
+			yourDeck.get(i).draw(g,currentPanel);
 		}
     	for (int i=0;i<cardDropspot.size();i++) {
     		cardDropspot.get(i).draw(g,currentPanel);
@@ -315,9 +341,9 @@ class myPanel extends JPanel implements MouseListener{
 	    	}
 	    	for (int i=0;i<yourDeck.size();i++) {
 	    		if (yourDeck.get(i).wasClicked(e,currentPanel)){
-	    			selectedCard = i;
+	    			selectedCard = yourDeck.get(i);
 	    			setDraggingCard(yourDeck.get(i), e);
-	    			System.out.println("selected card: "+i);
+	    			System.out.println("selected card: "+yourDeck.get(i).deckIndex);
 	    			redraw();
 	    		}
 			}
@@ -330,10 +356,10 @@ class myPanel extends JPanel implements MouseListener{
     }
     
     public void moveCard(int dropSpot) {
-    	removedCardIndex = dropSpot;
-    	System.out.println("removed card index: "+removedCardIndex);
+    	draggingCard.setUnclickable();
     	draggingCard.locX = cardDropspot.get(dropSpot).locX;
 		draggingCard.locY = cardDropspot.get(dropSpot).locY;
+		removedDeckCard = draggingCard;
     }
     
     public void setScreen(String panelName) {
@@ -393,9 +419,13 @@ class myPanel extends JPanel implements MouseListener{
 	    				}
 	    				case "YourCards":{
 	    					if (draggingCard.equals(drawCard)) {
-	    						// user dragged a new card into there deck
-                                cardDropspot.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
-						redraw();
+	    						//removedDeckCard.locX = removedDeckCard.beforeDragX;
+	    						//removedDeckCard.locY = removedDeckCard.beforeDragY;
+	    						System.out.println("removed card deck index: "+removedDeckCard.deckIndex);
+	    						
+	    						yourDeck.add(new cardUI(myGame.userDrawPile().getFileName(),removedDeckCard.beforeDragX,removedDeckCard.beforeDragY,removedDeckCard.deckIndex));
+	    						// user dragged a new card into there deck Back of Card.png
+	    						//yourDeck.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
 	    					}
 	    					break;
 	    				}
