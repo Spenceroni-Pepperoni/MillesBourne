@@ -191,7 +191,7 @@ class cardUI extends buttonUI{
 				g.fillRoundRect(locX-5, locY-5, width+10, height+10,13,13);
 			}
 			g.drawImage(image, locX, locY, width, height, null);
-			System.out.println("drew card");
+			//System.out.println("drew card");
 		}
 	}
 	
@@ -215,7 +215,7 @@ class myPanel extends JPanel implements MouseListener{
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
 	cardUI backgroundImage = new cardUI("Background.jpg",0,0,1000,1000,"Startscreen");
-	int selectedCard = -1;'
+	int selectedCard = -1;
     int removedCardIndex = 0;
 	int draggingDifX = 0;
 	int draggingDifY = 0;
@@ -329,9 +329,10 @@ class myPanel extends JPanel implements MouseListener{
     }
     
     public void moveCard(int dropSpot) {
+    	removedCardIndex = dropSpot;
+    	System.out.println("removed card index: "+removedCardIndex);
     	draggingCard.locX = cardDropspot.get(dropSpot).locX;
 		draggingCard.locY = cardDropspot.get(dropSpot).locY;
-        removedCardIndex = dropSpot;
     }
     
     public void setScreen(String panelName) {
@@ -392,8 +393,8 @@ class myPanel extends JPanel implements MouseListener{
 	    				case "YourCards":{
 	    					if (draggingCard.equals(drawCard)) {
 	    						// user dragged a new card into there deck
-                                cardDropspot.set(removedCardIndex,new cardUI(// replace with card filename method,70+120*removedCardIndex,750));
-						redraw()
+                                cardDropspot.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
+						redraw();
 	    					}
 	    					break;
 	    				}
