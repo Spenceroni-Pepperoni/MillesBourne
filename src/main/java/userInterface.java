@@ -393,6 +393,7 @@ class myPanel extends JPanel implements MouseListener{
 	    					if (draggingCard.equals(drawCard)) {
 	    						// user dragged a new card into there deck
                                 cardDropspot.set(removedCardIndex,new cardUI(// replace with card filename method,70+120*removedCardIndex,750));
+						redraw()
 	    					}
 	    					break;
 	    				}
