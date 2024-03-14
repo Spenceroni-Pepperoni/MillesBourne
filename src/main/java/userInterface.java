@@ -207,6 +207,7 @@ class cardUI extends buttonUI{
 }
 //------------------------------------------------------------------------
 class myPanel extends JPanel implements MouseListener{
+	Game myGame;
 
 	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
 	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
@@ -222,7 +223,7 @@ class myPanel extends JPanel implements MouseListener{
 	String currentPanel = "Startscreen";
 	String rulesText = "Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc Abc";
 	myPanel(){
-		Game myGame = new Game("PlaceHolder");
+		myGame = new Game("PlaceHolder");
 		myGame.startGame();
 		ArrayList<Card> userDeck =  myGame.getUserDeck();
 		for (int i=0;i<userDeck.size();i++) {
