@@ -215,7 +215,8 @@ class myPanel extends JPanel implements MouseListener{
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
 	cardUI backgroundImage = new cardUI("Background.jpg",0,0,1000,1000,"Startscreen");
-	int selectedCard = -1;
+	int selectedCard = -1;'
+    int removedCardIndex = 0;
 	int draggingDifX = 0;
 	int draggingDifY = 0;
 	String currentPanel = "Startscreen";
@@ -288,7 +289,7 @@ class myPanel extends JPanel implements MouseListener{
 		}
     	drawCard.draw(g,currentPanel);
     }
-    
+        
     public void redraw() {
     	Graphics g = getGraphics();
     	paintComponent(g);
@@ -330,6 +331,7 @@ class myPanel extends JPanel implements MouseListener{
     public void moveCard(int dropSpot) {
     	draggingCard.locX = cardDropspot.get(dropSpot).locX;
 		draggingCard.locY = cardDropspot.get(dropSpot).locY;
+        removedCardIndex = dropSpot;
     }
     
     public void setScreen(String panelName) {
@@ -390,6 +392,7 @@ class myPanel extends JPanel implements MouseListener{
 	    				case "YourCards":{
 	    					if (draggingCard.equals(drawCard)) {
 	    						// user dragged a new card into there deck
+                                cardDropspot.set(removedCardIndex,new cardUI(// replace with card filename method,70+120*removedCardIndex,750));
 	    					}
 	    					break;
 	    				}
