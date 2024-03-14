@@ -7,6 +7,7 @@ public class Game {
 	private Computer comp;
 	private HumanPlayer user;
 	private int turnNum;
+	boolean gameOver;
 	
 	public Game(String name) {
 		comp = new Computer();
@@ -32,15 +33,43 @@ public class Game {
 			user.drawPile();
 			comp.drawPile();
 		}
+		gameOver = false;
 
 		
-		while (!gameOver) {
-			discard.add(user.takeTurn());
-			discard.add(comp.takeTurn());
-			turnNum++;
-			if (pile.size() == 0) {
-				gameOver = true;
-			}
+//		while (!gameOver) {
+//			discard.add(user.takeTurn());
+//			discard.add(comp.takeTurn());
+//			turnNum++;
+//			if (pile.size() == 0) {
+//				gameOver = true;
+//			}
+//		}
+	}
+
+
+	public boolean over(){
+		return gameOver;
+	}
+	public void turn(){
+		Card userCard = user.takeTurn();
+		if(userCard.getCanPlay()){
+
+		}else{
+			discard.add(userCard);
+		}
+		if (pile.size() == 0) {
+			gameOver = true;
+			return;
+		}
+		Card compCard = comp.takeTurn();
+		if(compCard.getCanPlay()){
+
+		}else{
+			discard.add(compCard);
+		}
+		if (pile.size() == 0) {
+			gameOver = true;
+			return;
 		}
 	}
 	
@@ -66,7 +95,7 @@ public class Game {
 				pile.add(new HazardCard("Stop"));
 			}
 			if (i < 6) {
-				pile.add(new RemedyCard("Repairs"));
+				pile.add(new RemedyCard("Repair"));
 				pile.add(new RemedyCard("Gasoline"));
 				pile.add(new RemedyCard("Spare Tire"));
 				pile.add(new RemedyCard("End of Speed Limit"));
@@ -79,7 +108,7 @@ public class Game {
 			if (i < 12) {
 				pile.add(new MileageCard("100 Miles", 100));
 			}
-			pile.add(new RemedyCard("Go"));
+			pile.add(new RemedyCard("Drive"));
 		}
 	}
 

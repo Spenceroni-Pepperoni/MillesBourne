@@ -39,4 +39,8 @@ public abstract class Card {
         return cardName;
     }
 
+    public String getFileName(){
+        return cardName + ".png";
+    }
+
 }

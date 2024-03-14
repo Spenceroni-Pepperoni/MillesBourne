@@ -36,4 +36,9 @@ public class MileageCard extends Card{
     public int getMileage() {
         return numMiles;
     }
+
+    @Override
+    public String getFileName(){
+        return "" + numMiles + ".png";
+    }
 }
