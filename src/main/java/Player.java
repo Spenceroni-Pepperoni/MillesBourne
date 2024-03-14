@@ -41,6 +41,8 @@ public abstract class Player {
 		hazards.add(card);
 	}
 
+
+
 	public Card discard(int index) {
 		Card temp = deck.get(index);
 		deck.remove(index);

@@ -7,7 +7,24 @@ public class HumanPlayer extends Player {
 		super();
 		this.name = name;
 	}
-	
+
+
+	public void draw(int drawPile){
+		if (drawPile == 0) {
+			drawPile();
+		} else {
+			drawDiscard();
+		}
+	}
+
+	public Card playCard(int playIndex){
+		if(!deck.get(playIndex).getCanPlay()) {
+			//change playIndex
+			return null;
+		}
+
+		return discard(playIndex);
+	}
 	public Card takeTurn() {
 		int playIndex = 0;
 		int drawPileOrDiscard = 0; //0 for pile, 1 for discard

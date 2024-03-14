@@ -112,6 +112,10 @@ public class Game {
 		}
 	}
 
+	public Card userDrawPile(){
+		user.drawPile();
+		return user.deck.get(user.deck.size()-1);
+	}
 	public ArrayList<Card> getUserDeck(){
 		return user.deck;
 	}
