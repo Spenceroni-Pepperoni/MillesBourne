@@ -252,11 +252,11 @@ class myPanel extends JPanel implements MouseListener{
 		}
 
 		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",Color.RED,true));
-		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",Color.GREEN,true));
+		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",Color.PINK,true));
 		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",Color.BLUE,true));
 		cardDropspot.add(new buttonUI(40, 740, 900, 220, "YourCards",Color.ORANGE,true));
 		cardDropspot.get(cardDropspot.size()-1).setInvis();
-		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.GRAY,true));
+		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.BLACK,true));
 		
 		buttons.add(new buttonUI(800, 480, 100, 60, "Save",Color.BLUE,false));
 		buttons.add(new buttonUI(800, 550, 100, 60, "Load",Color.BLUE,false));
@@ -285,19 +285,18 @@ class myPanel extends JPanel implements MouseListener{
 		
 	}
     public void paintComponent(Graphics g) {
-    	g.setColor(new Color(156,175,136));
+    	g.setColor(new Color(129,138,163));
+    	//g.setColor(new Color(156,175,136));
     	g.fillRect(0, 0, 1000, 1000);
     	
     	g.setColor(Color.BLUE);
     	g.setFont(new Font("Arial Black", Font.BOLD, 20));
     	backgroundImage.draw(g, currentPanel);
     	new buttonUI(5, 600, 100, 40, "Miles",Color.BLUE,false).draw(g, currentPanel);
-    	new buttonUI(5, 650, 100, 40, "You:"+15,Color.BLUE,false).draw(g, currentPanel);
-    	new buttonUI(5, 700, 100, 40, "AI:"+25,Color.BLUE,false).draw(g, currentPanel);
+    	new buttonUI(5, 650, 100, 40, "You:"+myGame.getUserMileage(),Color.BLUE,false).draw(g, currentPanel);
+    	new buttonUI(5, 700, 100, 40, "AI:"+myGame.getComputerMileage(),Color.BLUE,false).draw(g, currentPanel);
     	
-    	if (selectedCard != null) {
-    		selectedCard.draw(g, currentPanel,true);
-    	}
+    	
     	
     	for (int i=0;i<yourDeck.size();i++) {
 			yourDeck.get(i).draw(g,currentPanel);
@@ -314,6 +313,10 @@ class myPanel extends JPanel implements MouseListener{
     		drawCardPile.locY = 230+i*-15;
     		drawCardPile.draw(g,currentPanel);
 		}
+    	
+    	if (selectedCard != null) {
+    		selectedCard.draw(g, currentPanel,true);
+    	}
     	drawCard.draw(g,currentPanel);
     }
         
@@ -410,6 +413,8 @@ class myPanel extends JPanel implements MouseListener{
 	    					break;
 	    				}
 	    				case "Miles":{
+//	    					Card c = myGame.getUserDeck().get(draggingCard.deckIndex);
+//	    					c.playCard();
 	    					moveCard(i);
 	    					break;
 	    				}
