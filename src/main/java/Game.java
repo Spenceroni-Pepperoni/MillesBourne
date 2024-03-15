@@ -50,6 +50,14 @@ public class Game {
 	public boolean over(){
 		return gameOver;
 	}
+
+	public int getUserMileage(){
+		return user.getMileage();
+	}
+
+	public int getComputerMileage(){
+		return comp.getMileage();
+	}
 	public void turn(){
 		Card userCard = user.takeTurn();
 		if(userCard.getCanPlay()){
