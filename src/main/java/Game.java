@@ -58,6 +58,10 @@ public class Game {
 	public int getComputerMileage(){
 		return comp.getMileage();
 	}
+
+	public void addUserMileage(MileageCard c){
+		user.setMileage(c.getMileage() + user.getMileage());
+	}
 	public void turn(){
 		Card userCard = user.takeTurn();
 		if(userCard.getCanPlay()){
