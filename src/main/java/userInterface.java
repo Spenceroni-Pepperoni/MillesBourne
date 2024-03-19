@@ -251,9 +251,9 @@ class myPanel extends JPanel implements MouseListener{
 			//yourDeck.get(i).deckIndex = i;
 		}
 
-		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",Color.RED,true));
-		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",Color.PINK,true));
-		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",Color.BLUE,true));
+		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",new Color(255, 49, 49),true));
+		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",new Color(143, 79, 255),true));
+		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",new Color(58, 181, 255),true));
 		cardDropspot.add(new buttonUI(40, 740, 900, 220, "YourCards",Color.ORANGE,true));
 		cardDropspot.get(cardDropspot.size()-1).setInvis();
 		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.BLACK,true));
@@ -285,7 +285,7 @@ class myPanel extends JPanel implements MouseListener{
 		
 	}
     public void paintComponent(Graphics g) {
-    	g.setColor(new Color(129,138,163));
+    	g.setColor(new Color(255, 179, 71));
     	//g.setColor(new Color(156,175,136));
     	g.fillRect(0, 0, 1000, 1000);
     	
@@ -371,76 +371,81 @@ class myPanel extends JPanel implements MouseListener{
     }
     
     public void mouseReleased(MouseEvent e) {
-    	for (int i=0;i<buttons.size();i++) {
-    		buttons.get(i).setUnclicked();
-    		if (buttons.get(i).wasClicked(e,currentPanel)) {
-    			switch(buttons.get(i).text) {
-	    			case "Save":{
-						break;
+			for (int i = 0; i < buttons.size(); i++) {
+				buttons.get(i).setUnclicked();
+				if (buttons.get(i).wasClicked(e, currentPanel)) {
+					switch (buttons.get(i).text) {
+						case "Save": {
+							break;
+						}
+						case "Load": {
+
+							break;
+						}
+						case "Rules": {
+							setScreen("Rulesscreen");
+							break;
+						}
+						case "Start": {
+
+							setScreen("Default");
+							break;
+						}
+						case "Resume": {
+							setScreen("Default");
+							break;
+						}
 					}
-	    			case "Load":{
-    					
-    					break;
-    				}
-    				case "Rules":{
-    					setScreen("Rulesscreen");
-    					break;
-    				}
-    				case "Start":{
-    					setScreen("Default");
-    					break;
-    				}
-    				case "Resume":{
-    					setScreen("Default");
-    					break;
-    				}
-    			}
-    			
-    		}
-    		redraw();
-    	}
-    	if (draggingCard != null) {
-	    	draggingCard.finishDrag();
-	    	for (int i=0;i<cardDropspot.size();i++) {
-	    		if (cardDropspot.get(i).wasClicked(e,currentPanel)){
-	    			switch(cardDropspot.get(i).text) {
-	    				case "Hazards":{
-	    					moveCard(i);
-	    					break;
-	    				}
-	    				case "Safties":{
-	    					moveCard(i);
-	    					break;
-	    				}
-	    				case "Miles":{
-//	    					Card c = myGame.getUserDeck().get(draggingCard.deckIndex);
+
+				}
+				redraw();
+			}
+			if (draggingCard != null) {
+				draggingCard.finishDrag();
+				for (int i = 0; i < cardDropspot.size(); i++) {
+					if (cardDropspot.get(i).wasClicked(e, currentPanel)) {
+						switch (cardDropspot.get(i).text) {
+							case "Hazards": {
+								myGame.playCard(draggingCard.deckIndex);
+								moveCard(i);
+								break;
+							}
+							case "Safties": {
+								myGame.playCard(draggingCard.deckIndex);
+								moveCard(i);
+								break;
+							}
+							case "Miles": {
+	    					myGame.playCard(draggingCard.deckIndex);
 //	    					c.playCard();
-	    					moveCard(i);
-	    					break;
-	    				}
-	    				case "Discard":{
-	    					moveCard(i);
-	    					break;
-	    				}
-	    				case "YourCards":{
-	    					if (draggingCard.equals(drawCard)) {
-	    						//removedDeckCard.locX = removedDeckCard.beforeDragX;
-	    						//removedDeckCard.locY = removedDeckCard.beforeDragY;
-	    						System.out.println("removed card deck index: "+removedDeckCard.deckIndex);
-	    						
-	    						yourDeck.add(new cardUI(myGame.userDrawPile().getFileName(),removedDeckCard.beforeDragX,removedDeckCard.beforeDragY,removedDeckCard.deckIndex));
-	    						// user dragged a new card into there deck Back of Card.png
-	    						//yourDeck.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
-	    					}
-	    					break;
-	    				}
-	    			}
-	    			
-	    		}
-	    	}
-	    	draggingCard = null;
-	    	redraw();
-    	}
+								System.out.println(myGame.getUserMileage());
+								moveCard(i);
+								break;
+							}
+							case "Discard": {
+								moveCard(i);
+								break;
+							}
+							case "YourCards": {
+								if (draggingCard.equals(drawCard)) {
+									//removedDeckCard.locX = removedDeckCard.beforeDragX;
+									//removedDeckCard.locY = removedDeckCard.beforeDragY;
+									System.out.println("removed card deck index: " + removedDeckCard.deckIndex);
+
+									yourDeck.add(new cardUI(myGame.userDrawPile().getFileName(), removedDeckCard.beforeDragX, removedDeckCard.beforeDragY, removedDeckCard.deckIndex));
+									// user dragged a new card into there deck Back of Card.png
+									//yourDeck.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
+								}
+								break;
+							}
+						}
+
+					}
+				}
+				draggingCard = null;
+				//redraw();
+			}
+
     	
     	System.out.println("mouse released");
     }

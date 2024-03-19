@@ -30,7 +30,7 @@ public class MileageCard extends Card{
      */
     @Override
     public String getCardType() {
-        return  numMiles + " Miles";
+        return  "Mileage";
     }
 
     public int getMileage() {

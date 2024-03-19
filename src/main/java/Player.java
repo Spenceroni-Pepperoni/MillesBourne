@@ -41,6 +41,53 @@ public abstract class Player {
 		hazards.add(card);
 	}
 
+	public void removeHazard(RemedyCard card){
+		if(card.getCardName().equals("Spare Tire")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Flat Tire")){
+					hazards.remove(i);
+					return;
+				}
+			}
+		}else if(card.getCardName().equals("Drive")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Stop")){
+					hazards.remove(i);
+					return;
+				}
+			}
+		}else if(card.getCardName().equals("Gasoline")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Out of Gas")){
+					hazards.remove(i);
+					return;
+				}
+			}
+		}else if(card.getCardName().equals("End of SpeedLimit")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Speed Limit")){
+					hazards.remove(i);
+					return;
+				}
+			}
+		}else if(card.getCardName().equals("Repair")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Accident")){
+					hazards.remove(i);
+					return;
+				}
+			}
+		}
+
+
+	}
+
+	public void receiveSafety(Card card){
+		safeties.add(card);
+	}
+
+
+
 
 
 	public Card discard(int index) {
@@ -66,9 +113,75 @@ public abstract class Player {
 		}
 		return false;
 	}
+
+	public boolean getCanPlay(Card card){
+		if(card.getCardType().equals("MileageCard")){
+			if(hasHazard()){
+				return false;
+			}else{
+				if(speedLimit()){
+					if(((MileageCard) card).getMileage()<= 50){
+						return true;
+					}else{
+						return false;
+					}
+				}
+			}
+		}else if(card.getCardType().equals("RemedyCard")){
+			return checkRemedy((RemedyCard)card);
+		}else{
+			return true;
+		}
+		return true;
+	}
+
+	public void setTurn(boolean turn){
+		isTurn = turn;
+	}
 	
 	public boolean getTurn() {
 		return isTurn;
+	}
+
+
+	private boolean checkRemedy(RemedyCard card){
+		if(hazards.size() ==0){
+			return false;
+		}
+		if(card.getCardName().equals("Spare Tire")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Flat Tire")){
+					return true;
+				}
+			}
+		}else if(card.getCardName().equals("Drive")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Stop")){
+					return true;
+				}
+			}
+		}else if(card.getCardName().equals("Gasoline")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Out of Gas")){
+					return true;
+				}
+			}
+		}else if(card.getCardName().equals("End of SpeedLimit")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Speed Limit")){
+					return true;
+				}
+			}
+		}else if(card.getCardName().equals("Repair")){
+			for(int i =0; i<hazards.size(); i++){
+				if(hazards.get(i).getCardName().equals("Accident")){
+					return true;
+				}
+			}
+		}
+
+		return false;
+
 	}
 
 }

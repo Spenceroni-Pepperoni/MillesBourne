@@ -17,6 +17,7 @@ public class HumanPlayer extends Player {
 		}
 	}
 
+
 	public Card playCard(int playIndex){
 		if(!deck.get(playIndex).getCanPlay()) {
 			//change playIndex

@@ -27,6 +27,6 @@ public class SafetyCard extends Card{
      */
     @Override
     public String getCardType() {
-        return null;
+        return "Safety";
     }
 }

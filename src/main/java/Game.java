@@ -46,6 +46,9 @@ public class Game {
 //		}
 	}
 
+	public boolean isTurn(){
+		return user.getTurn();
+	}
 
 	public boolean over(){
 		return gameOver;
@@ -61,6 +64,47 @@ public class Game {
 
 	public void addUserMileage(MileageCard c){
 		user.setMileage(c.getMileage() + user.getMileage());
+	}
+
+	public void draw(int pile){
+		user.draw(pile);
+	}
+
+	public Card playCard(int index){
+		Card temp =  user.discard(index);
+		System.out.println(temp.getCardName());
+		if(user.getCanPlay(temp)){
+			if(temp.getCardType().equals("Mileage")){
+				System.out.println("this is Miles" + ((MileageCard) temp).getMileage());
+				user.setMileage(user.getMileage() + ((MileageCard) temp).getMileage());
+			}else if(temp.getCardType().equals("Hazard")){
+				comp.receiveHazard(temp);
+			}else if(temp.getCardType().equals("Safety")){
+				user.receiveSafety(temp);
+			}else if(temp.getCardType().equals("Remedy")){
+				user.removeHazard((RemedyCard) temp);
+			}
+		}
+
+		user.setTurn(false);
+
+
+		Card compCard = comp.takeTurn();
+		System.out.println("This is comp card" + compCard.getCardName() + comp.hasHazard());
+		if(user.getCanPlay(compCard)){
+			if(compCard.getCardType().equals("Mileage")){
+				System.out.println("this is Miles" + ((MileageCard) compCard).getMileage());
+				comp.setMileage(comp.getMileage() + ((MileageCard) compCard).getMileage());
+			}else if(compCard.getCardType().equals("Hazard")){
+				user.receiveHazard(compCard);
+			}else if(compCard.getCardType().equals("Safety")){
+				comp.receiveSafety(compCard);
+			}else if(compCard.getCardType().equals("Remedy")){
+				comp.removeHazard((RemedyCard) compCard);
+			}
+		}
+
+		return temp;
 	}
 	public void turn(){
 		Card userCard = user.takeTurn();
@@ -176,8 +220,11 @@ public class Game {
 	}
 
 	public static Card peekDiscardCard() {
-		Card c = discard.get(discard.size() - 1);
-		return c;
+		if(discard.size()>0){
+			Card c = discard.get(discard.size() - 1);
+			return c;
+		}
+		return null;
 	}
 	
 	public void shuffleDeck() {

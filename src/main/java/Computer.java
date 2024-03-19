@@ -8,9 +8,9 @@ public class Computer extends Player {
 
 
     public Card takeTurn() {
-        if(Game.peekDiscardCard().getCardType().equals("Safety")){
+        if(Game.peekDiscardCard() != null && Game.peekDiscardCard().getCardType().equals("Safety")){
            drawDiscard();
-        }else if(Game.peekDiscardCard().getCardType().equals("Remedy")){
+        }else if(Game.peekDiscardCard() != null && Game.peekDiscardCard().getCardType().equals("Remedy")){
             if(Game.peekDiscardCard().getCanPlay()){
                 drawDiscard();
             }
@@ -27,11 +27,11 @@ public class Computer extends Player {
 
                         for (int i = 0; i < deck.size(); i++) {
                             if (deck.get(i).getCardType().equals("Safety")) {
-                                if (deck.get(i).getCanPlay()) {
-                                    return deck.get(i);
+                                if (getCanPlay(deck.get(i))) {
+                                    return discard(i);
                                 }
                             }else if(deck.get(i).getCardType().equals("Remedy")){
-                                if (deck.get(i).getCanPlay()) {
+                                if (getCanPlay(deck.get(i))) {
                                     playIndex = i;
                                 }
                             }else if(deck.get(i).getCardType().equals("Mileage")){
@@ -45,7 +45,7 @@ public class Computer extends Player {
                                     }
                                 }
                             }else if(deck.get(i).getCardType().equals("Hazard")){
-                                if (deck.get(i).getCanPlay()) {
+                                if (getCanPlay(deck.get(i))) {
                                     hazard = i;
                                 }
                             }

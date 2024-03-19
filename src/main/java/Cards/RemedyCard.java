@@ -27,6 +27,6 @@ public class RemedyCard extends Card{
      */
     @Override
     public String getCardType() {
-        return null;
+        return "Remedy";
     }
 }
