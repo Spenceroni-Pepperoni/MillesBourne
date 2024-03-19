@@ -295,9 +295,9 @@ class myPanel extends JPanel implements MouseListener{
     	new buttonUI(5, 600, 100, 40, "Miles",Color.BLUE,false).draw(g, currentPanel);
     	new buttonUI(5, 650, 100, 40, "You:"+myGame.getUserMileage(),Color.BLUE,false).draw(g, currentPanel);
     	new buttonUI(5, 700, 100, 40, "AI:"+myGame.getComputerMileage(),Color.BLUE,false).draw(g, currentPanel);
-    	
-    	
-    	
+
+
+
     	for (int i=0;i<yourDeck.size();i++) {
 			yourDeck.get(i).draw(g,currentPanel);
 		}
@@ -431,8 +431,13 @@ class myPanel extends JPanel implements MouseListener{
 									//removedDeckCard.locX = removedDeckCard.beforeDragX;
 									//removedDeckCard.locY = removedDeckCard.beforeDragY;
 									System.out.println("removed card deck index: " + removedDeckCard.deckIndex);
-
-									yourDeck.add(new cardUI(myGame.userDrawPile().getFileName(), removedDeckCard.beforeDragX, removedDeckCard.beforeDragY, removedDeckCard.deckIndex));
+									myGame.userDrawPile();
+									ArrayList<Card> userDeck =  myGame.getUserDeck();
+									for (int j=0;j<userDeck.size();j++) {
+										yourDeck.add(new cardUI(userDeck.get(j).getFileName(),70+120*j,750,j));
+										//yourDeck.get(i).deckIndex = i;
+									}
+									//yourDeck.add(new cardUI(myGame.userDrawPile().getFileName(), removedDeckCard.beforeDragX, removedDeckCard.beforeDragY, removedDeckCard.deckIndex));
 									// user dragged a new card into there deck Back of Card.png
 									//yourDeck.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
 								}
