@@ -70,8 +70,8 @@ public class Game {
 		user.draw(pile);
 	}
 
-	public Card playCard(int index){
-		Card temp =  user.discard(index);
+	public Card playCard(Card card){
+		Card temp =  card;
 		System.out.println("\nYou played: " + temp.getCardName());
 		System.out.println("Your hazards:");
 		for (Card i : user.hazards) {

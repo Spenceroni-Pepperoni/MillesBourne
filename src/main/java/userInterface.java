@@ -446,7 +446,7 @@ class myPanel extends JPanel implements MouseListener{
 						switch (cardDropspot.get(i).text) {
 							case "Hazards": {
 								if (/*draggingCard.card.getCardType().equals("Hazard") && */yourDeck.size() == 7) {
-									myGame.playCard(draggingCard.deckIndex);
+									myGame.playCard(draggingCard.card);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedHazards.add(draggingCard);
@@ -455,7 +455,7 @@ class myPanel extends JPanel implements MouseListener{
 							}
 							case "Safties": {
 								if (/*draggingCard.card.getCardType().equals("Safety") && */yourDeck.size() == 7) {
-									myGame.playCard(draggingCard.deckIndex);
+									myGame.playCard(draggingCard.card);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedSafeties.add(draggingCard);
@@ -464,7 +464,7 @@ class myPanel extends JPanel implements MouseListener{
 							}
 							case "Miles": {
 								if (/*draggingCard.card.getCardType().equals("Mileage") && */yourDeck.size() == 7) {
-									myGame.playCard(draggingCard.deckIndex);
+									myGame.playCard(draggingCard.card);
 									//System.out.println(myGame.getUserMileage());
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
