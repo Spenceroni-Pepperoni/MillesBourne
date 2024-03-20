@@ -72,10 +72,14 @@ public class Game {
 
 	public Card playCard(int index){
 		Card temp =  user.discard(index);
-		System.out.println(temp.getCardName());
+		System.out.println("\nYou played: " + temp.getCardName());
+		System.out.println("Your hazards:");
+		for (Card i : user.hazards) {
+			System.out.println(i.getCardName());
+		}
 		if(user.getCanPlay(temp)){
 			if(temp.getCardType().equals("Mileage")){
-				System.out.println("this is Miles" + ((MileageCard) temp).getMileage());
+				//System.out.println("this is Miles " + ((MileageCard) temp).getMileage());
 				user.setMileage(user.getMileage() + ((MileageCard) temp).getMileage());
 			}else if(temp.getCardType().equals("Hazard")){
 				comp.receiveHazard(temp);
@@ -90,10 +94,14 @@ public class Game {
 
 
 		Card compCard = comp.takeTurn();
-		System.out.println("This is comp card" + compCard.getCardName() + comp.hasHazard());
+		System.out.println("\nAI plays: " + compCard.getCardName());
+		System.out.println("AI's hazards:");
+		for (Card i : comp.hazards) {
+			System.out.println(i.getCardName());
+		}
 		if(user.getCanPlay(compCard)){
 			if(compCard.getCardType().equals("Mileage")){
-				System.out.println("this is Miles" + ((MileageCard) compCard).getMileage());
+				//System.out.println("this is Miles " + ((MileageCard) compCard).getMileage());
 				comp.setMileage(comp.getMileage() + ((MileageCard) compCard).getMileage());
 			}else if(compCard.getCardType().equals("Hazard")){
 				user.receiveHazard(compCard);

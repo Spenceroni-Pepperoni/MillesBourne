@@ -254,6 +254,7 @@ class myPanel extends JPanel implements MouseListener{
 	ArrayList<cardUI> playedMiles = new ArrayList<cardUI>();
 	ArrayList<cardUI> playedSafeties = new ArrayList<cardUI>();
 	ArrayList<cardUI> playedHazards = new ArrayList<cardUI>();
+	ArrayList<cardUI> discards = new ArrayList<cardUI>();
 	cardUI drawCard = new cardUI("Back of Card.png",850,125);
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
@@ -340,6 +341,10 @@ class myPanel extends JPanel implements MouseListener{
     	
     	for (int i = 0; i < playedSafeties.size(); i++) {
     		playedSafeties.get(i).draw(g, currentPanel);
+    	}
+    	
+    	for (int i = 0; i < discards.size(); i++) {
+    		discards.get(i).draw(g, currentPanel);
     	}
     	
     	for (int i=0;i<6;i++) {
@@ -440,44 +445,47 @@ class myPanel extends JPanel implements MouseListener{
 					if (cardDropspot.get(i).wasClicked(e, currentPanel)) {
 						switch (cardDropspot.get(i).text) {
 							case "Hazards": {
-								//if (draggingCard.card.getCardType().equals("Hazard")) {
+								if (/*draggingCard.card.getCardType().equals("Hazard") && */yourDeck.size() == 7) {
 									myGame.playCard(draggingCard.deckIndex);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedHazards.add(draggingCard);
-								//}
+								}
 								break;
 							}
 							case "Safties": {
-								//if (draggingCard.card.getCardType().equals("Safety")) {
+								if (/*draggingCard.card.getCardType().equals("Safety") && */yourDeck.size() == 7) {
 									myGame.playCard(draggingCard.deckIndex);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedSafeties.add(draggingCard);
-								//}
+								}
 								break;
 							}
 							case "Miles": {
-								//if (draggingCard.card.getCardType().equals("Mileage")) {
+								if (/*draggingCard.card.getCardType().equals("Mileage") && */yourDeck.size() == 7) {
 									myGame.playCard(draggingCard.deckIndex);
-									System.out.println(myGame.getUserMileage());
+									//System.out.println(myGame.getUserMileage());
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedMiles.add(draggingCard);
-								//}
+								}
 //	    					c.playCard();
 								break;
 							}
 							case "Discard": {
-								moveCard(i);
-								yourDeck.remove(draggingCard.deckIndex);
+								if (yourDeck.size() == 7) {
+									moveCard(i);
+									yourDeck.remove(draggingCard.deckIndex);
+									discards.add(draggingCard);
+								}
 								break;
 							}
 							case "YourCards": {
 								if (draggingCard.equals(drawCard) && yourDeck.size() < 7) {
 									//removedDeckCard.locX = removedDeckCard.beforeDragX;
 									//removedDeckCard.locY = removedDeckCard.beforeDragY;
-									System.out.println("removed card deck index: " + removedDeckCard.deckIndex);
+									//System.out.println("removed card deck index: " + removedDeckCard.deckIndex);
 									Card newCard = myGame.userDrawPile();
 									yourDeck.add(new cardUI(newCard.getFileName(), removedDeckCard.beforeDragX, removedDeckCard.beforeDragY, removedDeckCard.deckIndex, newCard));
 									// user dragged a new card into there deck Back of Card.png
@@ -486,6 +494,7 @@ class myPanel extends JPanel implements MouseListener{
 								break;
 							}
 						}
+						//redraws user's deck in order, moves all empty spaces to end
 						for (int j = 0; j < yourDeck.size(); j++) {
 				    		yourDeck.get(j).locX = 70 + 120 * j;
 				    		yourDeck.get(j).deckIndex = j;
@@ -498,6 +507,7 @@ class myPanel extends JPanel implements MouseListener{
 
     	repaint();
     	redraw();
+    	/*
     	System.out.println("mouse released\n");
     	System.out.println("yourDeck (deck shown in ui):");
     	System.out.println("length " + yourDeck.size());
@@ -508,6 +518,7 @@ class myPanel extends JPanel implements MouseListener{
     	for (Card c : myGame.getUserDeck()) {
     		System.out.println(c.getCardName());
     	}
+    	*/
     }
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}

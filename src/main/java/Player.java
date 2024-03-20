@@ -6,8 +6,8 @@ public abstract class Player {
 	protected ArrayList<Card> deck;
 	protected int mileage;
 	private boolean isTurn;
-	private ArrayList<Card> hazards;
-	private ArrayList<Card> safeties;
+	protected ArrayList<Card> hazards;
+	protected ArrayList<Card> safeties;
 	private boolean started;
 
 	public Player(){
@@ -115,7 +115,7 @@ public abstract class Player {
 	}
 
 	public boolean getCanPlay(Card card){
-		if(card.getCardType().equals("MileageCard")){
+		if(card.getCardType().equals("Mileage")){
 			if(hasHazard()){
 				return false;
 			}else{
@@ -127,7 +127,7 @@ public abstract class Player {
 					}
 				}
 			}
-		}else if(card.getCardType().equals("RemedyCard")){
+		}else if(card.getCardType().equals("Remedy")){
 			return checkRemedy((RemedyCard)card);
 		}else{
 			return true;
