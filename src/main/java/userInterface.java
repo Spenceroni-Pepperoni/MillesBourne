@@ -251,6 +251,11 @@ class myPanel extends JPanel implements MouseListener{
 	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
 	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
 	ArrayList<buttonUI> buttons = new ArrayList<buttonUI>();
+	/*
+	ArrayList<cardUI> playedMiles = new ArrayList<cardUI>();
+	ArrayList<cardUI> playedSafeties = new ArrayList<cardUI>();
+	ArrayList<cardUI> playedHazards = new ArrayList<cardUI>();
+	*/
 	cardUI drawCard = new cardUI("Back of Card.png",850,125);
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
@@ -317,7 +322,7 @@ class myPanel extends JPanel implements MouseListener{
     	new buttonUI(5, 700, 100, 40, "AI:"+myGame.getComputerMileage(),Color.BLUE,false).draw(g, currentPanel);
 
     	for (int i=0;i<yourDeck.size();i++) {
-    		System.out.println("drawing " + yourDeck.get(i).card.getCardName());
+    		//System.out.println("drawing " + yourDeck.get(i).card.getCardName());
 			yourDeck.get(i).draw(g,currentPanel);
 		}
     	for (int i=0;i<cardDropspot.size();i++) {
@@ -365,7 +370,7 @@ class myPanel extends JPanel implements MouseListener{
 	    		if (yourDeck.get(i).wasClicked(e,currentPanel)){
 	    			selectedCard = yourDeck.get(i);
 	    			setDraggingCard(yourDeck.get(i), e);
-	    			System.out.println("selected card: "+yourDeck.get(i).deckIndex);
+	    			System.out.println("selected card: "+ i + " " + yourDeck.get(i).card.getCardName());
 	    			redraw();
 	    		}
 			}
@@ -425,28 +430,31 @@ class myPanel extends JPanel implements MouseListener{
 					if (cardDropspot.get(i).wasClicked(e, currentPanel)) {
 						switch (cardDropspot.get(i).text) {
 							case "Hazards": {
-								if (draggingCard.card.getCardType().equals("Hazard")) {
+								//if (draggingCard.card.getCardType().equals("Hazard")) {
 									myGame.playCard(draggingCard.deckIndex);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-								}
+									//playedHazards.add(draggingCard);
+								//}
 								break;
 							}
 							case "Safties": {
-								if (draggingCard.card.getCardType().equals("Safety")) {
+								//if (draggingCard.card.getCardType().equals("Safety")) {
 									myGame.playCard(draggingCard.deckIndex);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-								}
+									//playedSafeties.add(draggingCard);
+								//}
 								break;
 							}
 							case "Miles": {
-								if (draggingCard.card.getCardType().equals("Mileage")) {
+								//if (draggingCard.card.getCardType().equals("Mileage")) {
 									myGame.playCard(draggingCard.deckIndex);
 									System.out.println(myGame.getUserMileage());
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-								}
+									//playedMiles.add(draggingCard);
+								//}
 //	    					c.playCard();
 								break;
 							}
@@ -456,7 +464,7 @@ class myPanel extends JPanel implements MouseListener{
 								break;
 							}
 							case "YourCards": {
-								if (draggingCard.equals(drawCard)) {
+								if (draggingCard.equals(drawCard) && yourDeck.size() < 7) {
 									//removedDeckCard.locX = removedDeckCard.beforeDragX;
 									//removedDeckCard.locY = removedDeckCard.beforeDragY;
 									System.out.println("removed card deck index: " + removedDeckCard.deckIndex);
@@ -470,6 +478,7 @@ class myPanel extends JPanel implements MouseListener{
 						}
 						for (int j = 0; j < yourDeck.size(); j++) {
 				    		yourDeck.get(j).locX = 70 + 120 * j;
+				    		yourDeck.get(j).deckIndex = j;
 				    	}
 					}
 				}
