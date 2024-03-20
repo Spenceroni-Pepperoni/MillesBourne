@@ -251,11 +251,9 @@ class myPanel extends JPanel implements MouseListener{
 	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
 	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
 	ArrayList<buttonUI> buttons = new ArrayList<buttonUI>();
-	/*
 	ArrayList<cardUI> playedMiles = new ArrayList<cardUI>();
 	ArrayList<cardUI> playedSafeties = new ArrayList<cardUI>();
 	ArrayList<cardUI> playedHazards = new ArrayList<cardUI>();
-	*/
 	cardUI drawCard = new cardUI("Back of Card.png",850,125);
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
@@ -330,6 +328,18 @@ class myPanel extends JPanel implements MouseListener{
     	}
     	for (int i=0;i<buttons.size();i++) {
     		buttons.get(i).draw(g,currentPanel);
+    	}
+    	
+    	for (int i = 0; i < playedMiles.size(); i++) {
+    		playedMiles.get(i).draw(g, currentPanel);
+    	}
+    	
+    	for (int i = 0; i < playedHazards.size(); i++) {
+    		playedHazards.get(i).draw(g, currentPanel);
+    	}
+    	
+    	for (int i = 0; i < playedSafeties.size(); i++) {
+    		playedSafeties.get(i).draw(g, currentPanel);
     	}
     	
     	for (int i=0;i<6;i++) {
@@ -434,7 +444,7 @@ class myPanel extends JPanel implements MouseListener{
 									myGame.playCard(draggingCard.deckIndex);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-									//playedHazards.add(draggingCard);
+									playedHazards.add(draggingCard);
 								//}
 								break;
 							}
@@ -443,7 +453,7 @@ class myPanel extends JPanel implements MouseListener{
 									myGame.playCard(draggingCard.deckIndex);
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-									//playedSafeties.add(draggingCard);
+									playedSafeties.add(draggingCard);
 								//}
 								break;
 							}
@@ -453,7 +463,7 @@ class myPanel extends JPanel implements MouseListener{
 									System.out.println(myGame.getUserMileage());
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-									//playedMiles.add(draggingCard);
+									playedMiles.add(draggingCard);
 								//}
 //	    					c.playCard();
 								break;
