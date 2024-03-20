@@ -47,12 +47,21 @@ class buttonUI{
 	boolean textAboveUI;
 	ArrayList<String> textWrapped;
 	boolean unclickable;
+	Card card;
 	
 	public buttonUI(int locX,int locY, int width, int height) {
 		this.locX = locX;
 		this.locY = locY;
 		this.width = width;
 		this.height = height;
+	}
+	
+	public buttonUI(int locX,int locY, int width, int height, Card card) {
+		this.locX = locX;
+		this.locY = locY;
+		this.width = width;
+		this.height = height;
+		this.card = card;
 	}
 	
 	public buttonUI(int locX,int locY, int width, int height,String panelName) {
@@ -163,7 +172,7 @@ class cardUI extends buttonUI{
 	BufferedImage image;
 	int beforeDragX;
 	int beforeDragY;
-	int deckIndex = -1;
+	int deckIndex = 0;
 	
 	public cardUI(String imageName,int x, int y) {
 		super(x,y,108,192);
@@ -199,9 +208,20 @@ class cardUI extends buttonUI{
 		}
 	}
 	
+	public cardUI(String imageName,int x, int y,int index, Card card) {
+		super(x,y,108, 192, card);
+		try {
+			image = ImageIO.read(new File(imageName));
+			this.text = imageName;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.deckIndex = index;
+	}
+	
 	public void draw(Graphics g,String currentPanel) {
 		draw(g,currentPanel,false);
-	
 	}
 	
 	public void draw(Graphics g,String currentPanel,boolean selected) {
@@ -247,7 +267,7 @@ class myPanel extends JPanel implements MouseListener{
 		myGame.startGame();
 		ArrayList<Card> userDeck =  myGame.getUserDeck();
 		for (int i=0;i<userDeck.size();i++) {
-			yourDeck.add(new cardUI(userDeck.get(i).getFileName(),70+120*i,750,i));
+			yourDeck.add(new cardUI(userDeck.get(i).getFileName(),70+120*i,750,i, userDeck.get(i)));
 			//yourDeck.get(i).deckIndex = i;
 		}
 
@@ -273,9 +293,9 @@ class myPanel extends JPanel implements MouseListener{
 		 this.addMouseMotionListener(new MouseMotionAdapter() {
 	            @Override
 	            public void mouseDragged(MouseEvent e) {
-	            	System.out.println("mouse dragged");
+	            	//System.out.println("mouse dragged");
 	                if (draggingCard != null) {
-	                	System.out.println("dragging card: "+draggingCard.text);
+	                	//System.out.println("dragging card: "+draggingCard.text);
 	                	draggingCard.locX = e.getX()-draggingDifX;
 	                	draggingCard.locY = e.getY()-draggingDifY;
 	                }
@@ -334,7 +354,7 @@ class myPanel extends JPanel implements MouseListener{
     
     public void mousePressed(MouseEvent e) {
     	if (e.getButton() == MouseEvent.BUTTON1) {
-	    	System.out.println("mouse pressed");
+	    	//System.out.println("mouse pressed");
 	    	// add buffer image to stop flickering
 	    	for (int i=0;i<buttons.size();i++) {
 	    		if (buttons.get(i).wasClicked(e,currentPanel)) {
@@ -434,7 +454,7 @@ class myPanel extends JPanel implements MouseListener{
 									myGame.userDrawPile();
 									ArrayList<Card> userDeck =  myGame.getUserDeck();
 									for (int j=0;j<userDeck.size();j++) {
-										yourDeck.add(new cardUI(userDeck.get(j).getFileName(),70+120*j,750,j));
+										yourDeck.add(new cardUI(userDeck.get(j).getFileName(),70+120*j,750,j, userDeck.get(j)));
 										//yourDeck.get(i).deckIndex = i;
 									}
 									//yourDeck.add(new cardUI(myGame.userDrawPile().getFileName(), removedDeckCard.beforeDragX, removedDeckCard.beforeDragY, removedDeckCard.deckIndex));
@@ -451,8 +471,17 @@ class myPanel extends JPanel implements MouseListener{
 				//redraw();
 			}
 
-    	
-    	System.out.println("mouse released");
+    	repaint();
+    	System.out.println("mouse released\n");
+    	System.out.println("yourDeck (deck shown in ui):");
+    	for (cardUI i : yourDeck) {
+    		System.out.println(i.card.getCardName());
+    	}
+    	System.out.println();
+    	System.out.println("userDeck (deck stored in game):");
+    	for (Card c : myGame.getUserDeck()) {
+    		System.out.println(c.getCardName());
+    	}
     }
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
