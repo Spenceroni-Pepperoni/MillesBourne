@@ -56,6 +56,16 @@ class buttonUI{
 		this.height = height;
 	}
 	
+	public buttonUI(int locX,int locY, int width, int height, boolean unclickable, String text, Color color) {
+		this.locX = locX;
+		this.locY = locY;
+		this.width = width;
+		this.height = height;
+		this.unclickable = unclickable;
+		this.text = text;
+		this.color = color;
+	}
+	
 	public buttonUI(int locX,int locY, int width, int height, Card card) {
 		this.locX = locX;
 		this.locY = locY;
@@ -163,6 +173,10 @@ class buttonUI{
 		invis = true;
 	}
 	
+	public void setVisible() {
+		invis = false;
+	}
+	
 	public void setUnclickable() {
 		unclickable = true;
 	}
@@ -254,7 +268,12 @@ class myPanel extends JPanel implements MouseListener{
 	ArrayList<cardUI> playedMiles = new ArrayList<cardUI>();
 	ArrayList<cardUI> playedSafeties = new ArrayList<cardUI>();
 	ArrayList<cardUI> playedHazards = new ArrayList<cardUI>();
+	ArrayList<cardUI> AIplayedMiles = new ArrayList<cardUI>();
+	ArrayList<cardUI> AIplayedSafeties = new ArrayList<cardUI>();
+	ArrayList<cardUI> AIplayedHazards = new ArrayList<cardUI>();
 	ArrayList<cardUI> discards = new ArrayList<cardUI>();
+	buttonUI instText = new buttonUI(205, 350, 500, 60, true, "text" , Color.BLACK);
+	buttonUI AIplayed = new buttonUI(205, 15, 500, 60, true, "text" , new Color(140, 0, 0));
 	cardUI drawCard = new cardUI("Back of Card.png",850,125);
 	cardUI drawCardPile = new cardUI("Back of Card.png",10,10);
 	cardUI draggingCard = null;
@@ -278,9 +297,14 @@ class myPanel extends JPanel implements MouseListener{
 		cardDropspot.add(new buttonUI(200, 500, 108, 192, "Hazards",new Color(255, 49, 49),true));
 		cardDropspot.add(new buttonUI(400, 500, 108, 192, "Safties",new Color(143, 79, 255),true));
 		cardDropspot.add(new buttonUI(600, 500, 108, 192, "Miles",new Color(58, 181, 255),true));
+		cardDropspot.add(new buttonUI(200, 100, 108, 192, "AI Hazards",new Color(255, 49, 49),true));
+		cardDropspot.add(new buttonUI(400, 100, 108, 192, "AI Safties",new Color(143, 79, 255),true));
+		cardDropspot.add(new buttonUI(600, 100, 108, 192, "AI Miles",new Color(58, 181, 255),true));
 		cardDropspot.add(new buttonUI(40, 740, 900, 220, "YourCards",Color.ORANGE,true));
 		cardDropspot.get(cardDropspot.size()-1).setInvis();
 		cardDropspot.add(new buttonUI(20, 200, 108, 192, "Discard",Color.BLACK,true));
+		instText.setInvis();
+		AIplayed.setInvis();
 		
 		buttons.add(new buttonUI(800, 480, 100, 60, "Save",Color.BLUE,false));
 		buttons.add(new buttonUI(800, 550, 100, 60, "Load",Color.BLUE,false));
@@ -320,6 +344,9 @@ class myPanel extends JPanel implements MouseListener{
     	new buttonUI(5, 650, 100, 40, "You:"+myGame.getUserMileage(),Color.BLUE,false).draw(g, currentPanel);
     	new buttonUI(5, 700, 100, 40, "AI:"+myGame.getComputerMileage(),Color.BLUE,false).draw(g, currentPanel);
 
+    	instText.draw(g, currentPanel);
+    	AIplayed.draw(g, currentPanel);
+    	
     	for (int i=0;i<yourDeck.size();i++) {
     		//System.out.println("drawing " + yourDeck.get(i).card.getCardName());
 			yourDeck.get(i).draw(g,currentPanel);
@@ -341,6 +368,18 @@ class myPanel extends JPanel implements MouseListener{
     	
     	for (int i = 0; i < playedSafeties.size(); i++) {
     		playedSafeties.get(i).draw(g, currentPanel);
+    	}
+    	
+    	for (int i = 0; i < AIplayedMiles.size(); i++) {
+    		AIplayedMiles.get(i).draw(g, currentPanel);
+    	}
+    	
+    	for (int i = 0; i < AIplayedHazards.size(); i++) {
+    		AIplayedHazards.get(i).draw(g, currentPanel);
+    	}
+    	
+    	for (int i = 0; i < AIplayedSafeties.size(); i++) {
+    		AIplayedSafeties.get(i).draw(g, currentPanel);
     	}
     	
     	for (int i = 0; i < discards.size(); i++) {
@@ -385,7 +424,7 @@ class myPanel extends JPanel implements MouseListener{
 	    		if (yourDeck.get(i).wasClicked(e,currentPanel)){
 	    			selectedCard = yourDeck.get(i);
 	    			setDraggingCard(yourDeck.get(i), e);
-	    			System.out.println("selected card: "+ i + " " + yourDeck.get(i).card.getCardName());
+	    			//System.out.println("selected card: "+ i + " " + yourDeck.get(i).card.getCardName());
 	    			redraw();
 	    		}
 			}
@@ -443,32 +482,51 @@ class myPanel extends JPanel implements MouseListener{
 				draggingCard.finishDrag();
 				for (int i = 0; i < cardDropspot.size(); i++) {
 					if (cardDropspot.get(i).wasClicked(e, currentPanel)) {
+						Card compCard = null;
 						switch (cardDropspot.get(i).text) {
-							case "Hazards": {
+							case "AI Hazards": {
 								if (/*draggingCard.card.getCardType().equals("Hazard") && */yourDeck.size() == 7) {
-									myGame.playCard(draggingCard.card);
+									compCard = myGame.playCard(draggingCard.card);
+									AIplayed.text = "AI played: " + compCard.getCardName();
+									AIplayed.setVisible();
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
-									playedHazards.add(draggingCard);
+									AIplayedHazards.add(draggingCard);
+									instText.setInvis();
+								} else {
+									instText.text = "You must draw a card first!";
+									instText.setVisible();
 								}
 								break;
 							}
 							case "Safties": {
 								if (/*draggingCard.card.getCardType().equals("Safety") && */yourDeck.size() == 7) {
-									myGame.playCard(draggingCard.card);
+									compCard = myGame.playCard(draggingCard.card);
+									AIplayed.text = "AI played: " + compCard.getCardName();
+									AIplayed.setVisible();
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedSafeties.add(draggingCard);
+									instText.setInvis();
+								} else {
+									instText.text = "You must draw a card first!";
+									instText.setVisible();
 								}
 								break;
 							}
 							case "Miles": {
 								if (/*draggingCard.card.getCardType().equals("Mileage") && */yourDeck.size() == 7) {
-									myGame.playCard(draggingCard.card);
+									compCard = myGame.playCard(draggingCard.card);
+									AIplayed.text = "AI played: " + compCard.getCardName();
+									AIplayed.setVisible();
 									//System.out.println(myGame.getUserMileage());
 									moveCard(i);
 									yourDeck.remove(draggingCard.deckIndex);
 									playedMiles.add(draggingCard);
+									instText.setInvis();
+								} else {
+									instText.text = "You must draw a card first!";
+									instText.setVisible();
 								}
 //	    					c.playCard();
 								break;
@@ -476,13 +534,22 @@ class myPanel extends JPanel implements MouseListener{
 							case "Discard": {
 								if (yourDeck.size() == 7) {
 									moveCard(i);
+									compCard = myGame.compTakesTurn();
+									AIplayed.text = "AI played: " + compCard.getCardName();
+									AIplayed.setVisible();
 									yourDeck.remove(draggingCard.deckIndex);
 									discards.add(draggingCard);
+									instText.setInvis();
+								} else {
+									instText.text = "You must draw a card first!";
+									instText.setVisible();
 								}
 								break;
 							}
 							case "YourCards": {
 								if (draggingCard.equals(drawCard) && yourDeck.size() < 7) {
+									instText.setInvis();
+									AIplayed.setInvis();
 									//removedDeckCard.locX = removedDeckCard.beforeDragX;
 									//removedDeckCard.locY = removedDeckCard.beforeDragY;
 									//System.out.println("removed card deck index: " + removedDeckCard.deckIndex);
@@ -490,8 +557,27 @@ class myPanel extends JPanel implements MouseListener{
 									yourDeck.add(new cardUI(newCard.getFileName(), removedDeckCard.beforeDragX, removedDeckCard.beforeDragY, removedDeckCard.deckIndex, newCard));
 									// user dragged a new card into there deck Back of Card.png
 									//yourDeck.set(removedCardIndex,new cardUI("Stop.png",70+120*removedCardIndex,750));
+								} else {
+									instText.text = "You must play/discard a card first!";
+									instText.setVisible();
 								}
 								break;
+							}
+						}
+						if (compCard != null) {
+							switch (compCard.getCardType()) {
+								case "Hazard": {
+									playedHazards.add(new cardUI(compCard.getFileName(), 200, 500, 0, compCard));
+									break;
+								}
+								case "Safety": {
+									AIplayedSafeties.add(new cardUI(compCard.getFileName(), 400, 100, 0, compCard));
+									break;
+								}
+								case "Mileage": {
+									AIplayedMiles.add(new cardUI(compCard.getFileName(), 600, 100, 0, compCard));
+									break;
+								}
 							}
 						}
 						//redraws user's deck in order, moves all empty spaces to end

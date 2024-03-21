@@ -86,7 +86,7 @@ public class Game {
 			}else if(temp.getCardType().equals("Safety")){
 				user.receiveSafety(temp);
 			}else if(temp.getCardType().equals("Remedy")){
-				user.removeHazard((RemedyCard) temp);
+				user.removeHazard(temp);
 			}
 		}
 
@@ -99,7 +99,7 @@ public class Game {
 		for (Card i : comp.hazards) {
 			System.out.println(i.getCardName());
 		}
-		if(user.getCanPlay(compCard)){
+		if(comp.getCanPlay(compCard)){
 			if(compCard.getCardType().equals("Mileage")){
 				//System.out.println("this is Miles " + ((MileageCard) compCard).getMileage());
 				comp.setMileage(comp.getMileage() + ((MileageCard) compCard).getMileage());
@@ -108,12 +108,36 @@ public class Game {
 			}else if(compCard.getCardType().equals("Safety")){
 				comp.receiveSafety(compCard);
 			}else if(compCard.getCardType().equals("Remedy")){
-				comp.removeHazard((RemedyCard) compCard);
+				comp.removeHazard(compCard);
 			}
 		}
 
-		return temp;
+		return compCard;
 	}
+	
+	public Card compTakesTurn() {
+		Card compCard = comp.takeTurn();
+		System.out.println("\nAI plays: " + compCard.getCardName());
+		System.out.println("AI's hazards:");
+		for (Card i : comp.hazards) {
+			System.out.println(i.getCardName());
+		}
+		if(comp.getCanPlay(compCard)){
+			if(compCard.getCardType().equals("Mileage")){
+				//System.out.println("this is Miles " + ((MileageCard) compCard).getMileage());
+				comp.setMileage(comp.getMileage() + ((MileageCard) compCard).getMileage());
+			}else if(compCard.getCardType().equals("Hazard")){
+				user.receiveHazard(compCard);
+			}else if(compCard.getCardType().equals("Safety")){
+				comp.receiveSafety(compCard);
+			}else if(compCard.getCardType().equals("Remedy")){
+				comp.removeHazard(compCard);
+			}
+		}
+		
+		return compCard;
+	}
+	
 	public void turn(){
 		Card userCard = user.takeTurn();
 		if(userCard.getCanPlay()){

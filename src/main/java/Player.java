@@ -41,7 +41,7 @@ public abstract class Player {
 		hazards.add(card);
 	}
 
-	public void removeHazard(RemedyCard card){
+	public void removeHazard(Card card){
 		if(card.getCardName().equals("Spare Tire")){
 			for(int i =0; i<hazards.size(); i++){
 				if(hazards.get(i).getCardName().equals("Flat Tire")){
@@ -63,7 +63,7 @@ public abstract class Player {
 					return;
 				}
 			}
-		}else if(card.getCardName().equals("End of SpeedLimit")){
+		}else if(card.getCardName().equals("End of Speed Limit")){
 			for(int i =0; i<hazards.size(); i++){
 				if(hazards.get(i).getCardName().equals("Speed Limit")){
 					hazards.remove(i);
@@ -116,11 +116,11 @@ public abstract class Player {
 
 	public boolean getCanPlay(Card card){
 		if(card.getCardType().equals("Mileage")){
-			if(hasHazard()){
+			if(hasHazard() && !speedLimit()){
 				return false;
 			}else{
 				if(speedLimit()){
-					if(((MileageCard) card).getMileage()<= 50){
+					if(((MileageCard) card).getMileage() <= 50){
 						return true;
 					}else{
 						return false;
