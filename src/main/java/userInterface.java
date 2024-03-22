@@ -262,6 +262,7 @@ class cardUI extends buttonUI{
 //------------------------------------------------------------------------
 class myPanel extends JPanel implements MouseListener{
 
+	JLabel label;
 	ArrayList<cardUI> yourDeck = new ArrayList<cardUI>();
 	ArrayList<buttonUI> cardDropspot = new ArrayList<buttonUI>();
 	ArrayList<buttonUI> buttons = new ArrayList<buttonUI>();
@@ -310,9 +311,18 @@ class myPanel extends JPanel implements MouseListener{
 		buttons.add(new buttonUI(830, 550, 100, 60, "Load",Color.BLUE,false));
 		buttons.add(new buttonUI(830, 620, 100, 60, "Rules",Color.BLUE,false));
 		
-		buttons.add(new buttonUI(800, 560, 100, 60, "Load",Color.BLUE,false,"Startscreen"));
-		buttons.add(new buttonUI(800, 480, 100, 60, "Start",Color.BLUE,false,"Startscreen"));
-		
+		buttons.add(new buttonUI(800, 560, 100, 60, "Load",Color.YELLOW,false,"Startscreen"));
+		buttons.add(new buttonUI(800, 480, 100, 60, "Start",Color.YELLOW,false,"Startscreen"));
+
+		//buttons.add(new buttonUI(200, 200, 136, 76, "Miles Quest", Color.RED, false, "Startscreen"));
+		label = new JLabel("Mile Quest");
+		label.setVisible(true);
+		label.setLocation(100, 250);
+		label.setFont(new Font("Serif", Font.PLAIN, 100));
+		label.setForeground(Color.RED);
+
+		add(label);
+
 		buttons.add(new buttonUI(300, 100, 600, 370, rulesText,Color.BLUE,false,"Rulesscreen"));
 		buttons.get(buttons.size()-1).setUnclickable();
 		buttons.add(new buttonUI(800, 480, 100, 60, "Resume",Color.BLUE,false,"Rulesscreen"));
@@ -412,9 +422,15 @@ class myPanel extends JPanel implements MouseListener{
     
     public void mousePressed(MouseEvent e) {
     	if (e.getButton() == MouseEvent.BUTTON1) {
+
+
 	    	//System.out.println("mouse pressed");
 	    	// add buffer image to stop flickering
 	    	for (int i=0;i<buttons.size();i++) {
+				if(3 == i|| i == 4){
+					label.setVisible(false);`
+				}
+
 	    		if (buttons.get(i).wasClicked(e,currentPanel)) {
 	    			buttons.get(i).setClicked();
 	    			redraw();
